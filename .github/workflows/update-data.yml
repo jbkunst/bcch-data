@@ -1,0 +1,88 @@
+name: update-data
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 06 * * *"
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - uses: quarto-dev/quarto-actions/setup@v2
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: |
+            any::jsonlite
+            any::yaml
+            any::highcharter
+            any::scales
+            github::jbkunst/bcchr
+
+      - name: Update data from BCCh
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        env:
+          BCCH_TOKEN: ${{ secrets.BCCH_TOKEN }}
+        run: Rscript scripts/update_data.R
+
+      - name: Validate static API
+        run: Rscript scripts/update_data.R --validate-only
+
+      - name: Render dashboard from local JSON
+        run: quarto render dashboard/index.qmd --output-dir ../_site
+
+      - name: Assemble Pages artifact
+        if: github.event_name != 'pull_request'
+        run: |
+          mkdir -p _site/api
+          cp -R api/v1 _site/api/v1
+
+      - name: Commit updated JSON
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add api/v1
+          git diff --cached --quiet || git commit -m "Update BCCh data"
+          git push
+
+      - uses: actions/configure-pages@v5
+        if: github.event_name != 'pull_request'
+
+      - uses: actions/upload-pages-artifact@v4
+        if: github.event_name != 'pull_request'
+        with:
+          path: _site
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

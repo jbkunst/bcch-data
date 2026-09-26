@@ -1,0 +1,27 @@
+# Local credentials and environment
+.Renviron
+.env
+.env.*
+
+# R sessions and editors
+.Rhistory
+.Rapp.history
+.RData
+.Ruserdata
+.Rproj.user/
+
+# Rendered and intermediate output
+*.html
+*.utf8.md
+*.knit.md
+*_cache/
+cache/
+.quarto/
+_site/
+dashboard/_site/
+
+# Operating-system and editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp

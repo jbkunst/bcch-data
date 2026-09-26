@@ -1,0 +1,155 @@
+---
+title: "Indicadores Financieros"
+author: "Datos del Banco Central de Chile"
+format:
+  dashboard:
+    scrolling: true
+    theme: cosmo
+    embed-resources: true
+    nav-buttons:
+      - icon: database
+        href: api/v1/manifest.json
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+library(highcharter)
+
+find_project_root <- function(path = getwd()) {
+  path <- normalizePath(path, mustWork = TRUE)
+  repeat {
+    if (file.exists(file.path(path, "config", "series.yml"))) return(path)
+    parent <- dirname(path)
+    if (identical(parent, path)) stop("Could not locate the project root.")
+    path <- parent
+  }
+}
+
+project_root <- find_project_root()
+series_dir <- file.path(project_root, "api", "v1", "series")
+
+read_series <- function(id) {
+  payload <- jsonlite::read_json(
+    file.path(series_dir, paste0(id, ".json")),
+    simplifyVector = TRUE
+  )
+  data.frame(
+    date = as.Date(payload$observations$date),
+    value = as.numeric(payload$observations$value)
+  )
+}
+
+annual_change <- function(data, periods) {
+  data$value <- 100 * (data$value / c(rep(NA_real_, periods), head(data$value, -periods)) - 1)
+  data
+}
+
+format_percent <- function(x) scales::percent(x / 100, accuracy = 0.1, decimal.mark = ",")
+format_number <- function(x) scales::number(x, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
+format_currency <- function(x) scales::dollar(x, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
+
+make_chart <- function(id, label, transform = identity, formatter = format_number) {
+  data <- transform(read_series(id))
+  data <- data[is.finite(data$value), , drop = FALSE]
+  last_date <- max(data$date)
+  first_date <- seq(last_date, by = "-5 years", length.out = 2L)[[2L]]
+  visible <- data[data$date >= first_date, , drop = FALSE]
+  latest <- tail(visible$value, 1L)
+
+  highcharter::hchart(visible, "line", highcharter::hcaes(x = date, y = value), name = label) |>
+    highcharter::hc_title(text = formatter(latest)) |>
+    highcharter::hc_subtitle(text = paste0(label, " · último dato: ", format(last_date, "%d-%m-%Y"))) |>
+    highcharter::hc_chart(zoomType = "x") |>
+    highcharter::hc_xAxis(type = "datetime", ordinal = FALSE, title = list(text = NULL)) |>
+    highcharter::hc_yAxis(title = list(text = NULL), opposite = TRUE) |>
+    highcharter::hc_plotOptions(series = list(connectNulls = TRUE, marker = list(enabled = FALSE))) |>
+    highcharter::hc_rangeSelector(
+      selected = 1,
+      inputEnabled = FALSE,
+      buttons = list(
+        list(type = "ytd", text = "YTD"),
+        list(type = "year", count = 1, text = "1a"),
+        list(type = "year", count = 5, text = "5a")
+      )
+    ) |>
+    highcharter::hc_navigator(enabled = TRUE, height = 24) |>
+    highcharter::hc_scrollbar(enabled = FALSE) |>
+    highcharter::hc_exporting(enabled = FALSE) |>
+    highcharter::hc_colors("#0c1c32")
+}
+```
+
+## Row
+
+### PIB
+
+```{r}
+make_chart(
+  "F032.PIB.FLU.R.CLP.EP18.Z.Z.0.T",
+  "PIB · variación interanual",
+  transform = function(x) annual_change(x, 4L),
+  formatter = format_percent
+)
+```
+
+### IPC
+
+```{r}
+make_chart("F074.IPC.IND.Z.EP09.C.M", "IPC · variación interanual", formatter = format_percent)
+```
+
+## Row
+
+### Desempleo
+
+```{r}
+make_chart("F049.DES.TAS.INE9.10.M", "Tasa de desempleo", formatter = format_percent)
+```
+
+### IMACEC
+
+```{r}
+make_chart(
+  "F032.IMC.IND.Z.Z.EP18.Z.Z.0.M",
+  "IMACEC · variación interanual",
+  transform = function(x) annual_change(x, 12L),
+  formatter = format_percent
+)
+```
+
+## Row
+
+### TPM
+
+```{r}
+make_chart("F022.TPM.TIN.D001.NO.Z.D", "Tasa de política monetaria", formatter = format_percent)
+```
+
+### Dólar observado
+
+```{r}
+make_chart(
+  "F073.TCO.PRE.Z.D", "Dólar observado · CLP/USD",
+  formatter = function(x) paste0(format_number(x), " $/USD")
+)
+```
+
+## Row
+
+### UF
+
+```{r}
+make_chart("F073.UFF.PRE.Z.D", "Unidad de Fomento", formatter = format_currency)
+```
+
+### UTM
+
+```{r}
+make_chart(
+  "F073.UTR.PRE.Z.M", "Unidad Tributaria Mensual",
+  formatter = function(x) scales::dollar(x, accuracy = 1, big.mark = ".", decimal.mark = ",")
+)
+```
