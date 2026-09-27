@@ -94,7 +94,7 @@ https://jbkunst.github.io/bcch-data/api/v1/indicators.json
 https://jbkunst.github.io/bcch-data/api/v1/series/F073.TCO.PRE.Z.D.json
 ```
 
-La actualización automática corre diariamente a las 06:17 UTC y también puede
+La actualización automática corre diariamente a las 23:30 UTC y también puede
 ejecutarse manualmente. El HTML del dashboard se publica como artefacto de GitHub
 Pages y no se versiona en `main`.
 

@@ -8,6 +8,7 @@
   --studio-paper: #f6f7f8;
   --studio-border: #d8dee7;
   --studio-sky: #75bddb;
+  --studio-accent: #cf573b;
   --studio-editorial-font: "Newsreader", Georgia, serif;
   --studio-heading-font: "IBM Plex Serif", Georgia, serif;
   --studio-technical-font: "IBM Plex Sans", "Segoe UI", sans-serif;
@@ -131,15 +132,20 @@ body,
   padding-top: 0 !important;
 }
 
+.quarto-dashboard-content:not(.dashboard-scrolling) {
+  padding: 0.45rem 0.7rem 0.7rem !important;
+  gap: 0.55rem !important;
+}
+
 .studio-hero {
   min-width: 0;
   max-width: 100%;
   box-sizing: border-box;
-  padding: 0.65rem 1.8rem 0.9rem;
+  padding: 0.35rem 0.2rem 0.45rem;
 }
 
 .studio-eyebrow {
-  margin: 0 0 0.3rem;
+  margin: 0 0 0.1rem;
   color: var(--studio-gold);
   font-family: var(--studio-technical-font);
   font-size: 0.72rem;
@@ -152,17 +158,17 @@ body,
   margin: 0;
   color: var(--studio-ink);
   font-family: var(--studio-heading-font);
-  font-size: clamp(1.9rem, 3vw, 2.75rem);
+  font-size: clamp(1.5rem, 2.1vw, 2.1rem);
   font-weight: 500;
   letter-spacing: -0.025em;
 }
 
 .studio-hero > p:not(.studio-eyebrow) {
   max-width: 48rem;
-  margin: 0.45rem 0 0.25rem;
+  margin: 0.15rem 0 0.1rem;
   color: var(--studio-muted);
-  font-size: 1.08rem;
-  line-height: 1.45;
+  font-size: 0.94rem;
+  line-height: 1.25;
 }
 
 .studio-hero small {
@@ -177,6 +183,7 @@ body,
   border-radius: 7px;
   background: #fff;
   box-shadow: none;
+  border-top: 3px solid var(--studio-accent);
 }
 
 .card-header {
@@ -191,6 +198,11 @@ body,
 
 .card-body {
   background: #fff;
+  padding: 0.25rem !important;
+}
+
+.card[data-full-screen="true"] .card-body {
+  padding: 0.75rem !important;
 }
 
 .highcharts-container,
@@ -199,6 +211,29 @@ body,
 .highcharts-tooltip,
 .highcharts-range-selector-buttons {
   font-family: var(--studio-technical-font) !important;
+}
+
+@media (max-width: 900px) {
+  body,
+  .dashboard-page {
+    overflow-y: auto;
+  }
+
+  .quarto-dashboard-content:not(.dashboard-scrolling) {
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .bslib-grid[data-layout="flow"] {
+    display: block !important;
+    height: auto !important;
+  }
+
+  .bslib-grid[data-layout="flow"] > .bslib-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-rows: repeat(2, 310px) !important;
+    margin-bottom: 0.75rem;
+  }
 }
 
 @media (max-width: 700px) {
@@ -224,17 +259,12 @@ body,
   }
 
   .studio-hero {
-    padding: 0.55rem 1rem 0.75rem;
+    padding: 0.35rem 0.25rem 0.55rem;
   }
 
   .studio-hero h1 {
     font-size: 1.85rem;
     line-height: 1.08;
-  }
-
-  .bslib-grid[data-layout="flow"] {
-    display: block !important;
-    height: auto !important;
   }
 
   .bslib-grid[data-layout="flow"] > .bslib-grid {

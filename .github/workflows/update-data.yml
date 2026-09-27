@@ -3,7 +3,8 @@ name: update-data
 on:
   workflow_dispatch:
   schedule:
-    - cron: "17 06 * * *"
+    # 20:30 Chile (UTC-3) / 19:30 Chile (UTC-4), after the daily FX publication.
+    - cron: "30 23 * * *"
   push:
     branches: [main]
   pull_request:

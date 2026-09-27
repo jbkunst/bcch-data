@@ -2,7 +2,7 @@
 title: "Indicadores económicos"
 format:
   dashboard:
-    scrolling: true
+    scrolling: false
     theme: cosmo
     css: studio.css
     embed-resources: true
@@ -96,17 +96,20 @@ make_chart <- function(
     ) |>
     highcharter::hc_title(
       text = formatter(latest),
-      align = "left",
+      align = "center",
+      verticalAlign = "top",
+      y = 30,
       style = list(
-        color = "#003b5c",
+        color = "#17242d",
         fontFamily = "IBM Plex Serif, Georgia, serif",
-        fontSize = "30px",
+        fontSize = "34px",
         fontWeight = "500"
       )
     ) |>
     highcharter::hc_subtitle(
       text = paste0(label, " · último dato: ", format(last_date, "%d-%m-%Y")),
-      align = "left",
+      align = "center",
+      y = 62,
       style = list(color = "#53636d", fontSize = "12px")
     ) |>
     highcharter::hc_xAxis(
@@ -133,7 +136,7 @@ make_chart <- function(
       series = list(
         animation = FALSE,
         connectNulls = TRUE,
-        lineWidth = 2,
+        lineWidth = 2.5,
         marker = list(enabled = FALSE),
         states = list(hover = list(lineWidthPlus = 0))
       )
@@ -169,7 +172,25 @@ make_chart <- function(
     highcharter::hc_legend(enabled = FALSE) |>
     highcharter::hc_exporting(enabled = FALSE) |>
     highcharter::hc_credits(enabled = FALSE) |>
-    highcharter::hc_colors("#003b5c")
+    highcharter::hc_colors("#cf573b") |>
+    highcharter::hc_responsive(
+      rules = list(
+        list(
+          condition = list(maxWidth = 360),
+          chartOptions = list(
+            chart = list(spacing = c(4, 4, 2, 4)),
+            rangeSelector = list(enabled = FALSE),
+            navigator = list(enabled = FALSE),
+            xAxis = list(labels = list(enabled = FALSE), tickLength = 0),
+            yAxis = list(
+              labels = list(enabled = FALSE),
+              gridLineWidth = 0,
+              title = list(text = NULL)
+            )
+          )
+        )
+      )
+    )
 }
 ```
 
@@ -246,7 +267,7 @@ cat(
 )
 ```
 
-## Row {height=420}
+## Row {height=50%}
 
 ### PIB
 
@@ -272,8 +293,6 @@ make_chart(
 )
 ```
 
-## Row {height=420}
-
 ### Desempleo
 
 ```{r}
@@ -297,7 +316,7 @@ make_chart(
 )
 ```
 
-## Row {height=420}
+## Row {height=50%}
 
 ### TPM
 
@@ -320,8 +339,6 @@ make_chart(
   value_suffix = " $/USD"
 )
 ```
-
-## Row {height=420}
 
 ### UF
 
