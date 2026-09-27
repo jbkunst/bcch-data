@@ -36,6 +36,7 @@ jobs:
           extra-packages: |
             any::jsonlite
             any::yaml
+            any::cli
             any::highcharter
             any::scales
             github::jbkunst/bcchr
@@ -47,7 +48,7 @@ jobs:
         run: Rscript scripts/update_data.R
 
       - name: Validate static API
-        run: Rscript scripts/update_data.R --validate-only
+        run: python scripts/check_api.py
 
       - name: Render dashboard from local JSON
         run: quarto render dashboard/index.qmd --output-dir ../_site
@@ -64,7 +65,7 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add api/v1
-          git diff --cached --quiet || git commit -m "Update BCCh data"
+          git diff --cached --quiet || git commit -m "chore(data): update BCCh series"
           git push
 
       - uses: actions/configure-pages@v5

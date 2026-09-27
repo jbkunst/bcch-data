@@ -1,77 +1,853 @@
 {
-  "updated_at": "2026-09-26T18:06:36Z",
-  "series_count": 8,
+  "updated_at": "2026-09-27T03:31:14Z",
+  "series_count": 94,
+  "indicators_path": "indicators.json",
+  "indicator_count": 8,
   "series": {
-    "F032.PIB.FLU.R.CLP.EP18.Z.Z.0.T": {
-      "path": "series/F032.PIB.FLU.R.CLP.EP18.Z.Z.0.T.json",
-      "name": "PIB, volumen a precios del año anterior encadenado, referencia 2018 (miles de millones de pesos encadenados)",
-      "frequency": "QUARTERLY",
-      "last_observation": "2026-04-01",
-      "observation_count": 122,
-      "fetched_at": "2026-09-26T18:06:36Z",
+    "F032.IMC.V12.Z.Z.2018.Z.Z.0.M": {
+      "path": "series/F032.IMC.V12.Z.Z.2018.Z.Z.0.M.json",
+      "name": "Imacec (variación anual)",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-07-01",
+      "observation_count": 151,
+      "fetched_at": "2026-09-27T03:31:14Z",
       "status": "ok"
     },
-    "F074.IPC.IND.Z.EP09.C.M": {
-      "path": "series/F074.IPC.IND.Z.EP09.C.M.json",
-      "name": "IPC General, variación mismo período año anterior, información histórica",
+    "F032.IMC.VEL.Z.Z.2018.Z.Z.1.M": {
+      "path": "series/F032.IMC.VEL.Z.Z.2018.Z.Z.1.M.json",
+      "name": "Imacec desestacionalizado (promedio móvil de 3 meses)",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-07-01",
+      "observation_count": 362,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F032.PIB.V12.R.Z.2018.Z.Z.0.T": {
+      "path": "series/F032.PIB.V12.R.Z.2018.Z.Z.0.T.json",
+      "name": "PIB, variación anual",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 50,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F032.PIB.VAR.R.Z.2018.Z.Z.3.T": {
+      "path": "series/F032.PIB.VAR.R.Z.2018.Z.Z.3.T.json",
+      "name": "PIB, variación trimestral desestacionalizada",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 53,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F033.CPR.V12.R.Z.2018.0.T": {
+      "path": "series/F033.CPR.V12.R.Z.2018.0.T.json",
+      "name": "Consumo privado",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 50,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F033.VAX.V12.R.Z.2018.0.T": {
+      "path": "series/F033.VAX.V12.R.Z.2018.0.T.json",
+      "name": "Variación de existencias",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 50,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F033.COG.V12.R.Z.2018.0.T": {
+      "path": "series/F033.COG.V12.R.Z.2018.0.T.json",
+      "name": "Consumo gobierno",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 50,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F033.FKF.V12.R.Z.2018.0.T": {
+      "path": "series/F033.FKF.V12.R.Z.2018.0.T.json",
+      "name": "FBCF",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 50,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F033.XBS.V12.R.Z.2018.0.T": {
+      "path": "series/F033.XBS.V12.R.Z.2018.0.T.json",
+      "name": "Contribución de exportaciones",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 50,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F033.IBS.V12.R.Z.2018.0.T": {
+      "path": "series/F033.IBS.V12.R.Z.2018.0.T.json",
+      "name": "Contribución de importaciones",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 50,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F038.AHO.PPB2.53.10.N.2018.CLP.T": {
+      "path": "series/F038.AHO.PPB2.53.10.N.2018.CLP.T.json",
+      "name": "Hogares",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-01-01",
+      "observation_count": 90,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F038.AHO.PPB2.20.10.N.2018.CLP.T": {
+      "path": "series/F038.AHO.PPB2.20.10.N.2018.CLP.T.json",
+      "name": "Gobierno general",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-01-01",
+      "observation_count": 90,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F038.AHO.PPB2.48.10.N.2018.CLP.T": {
+      "path": "series/F038.AHO.PPB2.48.10.N.2018.CLP.T.json",
+      "name": "Sociedades financieras",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-01-01",
+      "observation_count": 90,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F038.AHO.PPB2.52.10.N.2018.CLP.T": {
+      "path": "series/F038.AHO.PPB2.52.10.N.2018.CLP.T.json",
+      "name": "Empresas no financieras",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-01-01",
+      "observation_count": 90,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F038.AHO.PPB2.10.10.N.2018.CLP.T": {
+      "path": "series/F038.AHO.PPB2.10.10.N.2018.CLP.T.json",
+      "name": "Economía nacional",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-01-01",
+      "observation_count": 90,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F034.PMI.IND.INE.2018.0.M": {
+      "path": "series/F034.PMI.IND.INE.2018.0.M.json",
+      "name": "IPI Minería",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-06-01",
+      "observation_count": 438,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F034.PRM.IND.INE.2018.0.M": {
+      "path": "series/F034.PRM.IND.INE.2018.0.M.json",
+      "name": "IPI Manufactura",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-06-01",
+      "observation_count": 426,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F034.VCC.IND.INE.2018.0.M": {
+      "path": "series/F034.VCC.IND.INE.2018.0.M.json",
+      "name": "Total",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-07-01",
+      "observation_count": 259,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F034.VDU.IND.INE.2018.0.M": {
+      "path": "series/F034.VDU.IND.INE.2018.0.M.json",
+      "name": "Durables",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-06-01",
+      "observation_count": 150,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F034.VND.IND.INE.2018.0.M": {
+      "path": "series/F034.VND.IND.INE.2018.0.M.json",
+      "name": "No durables",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-06-01",
+      "observation_count": 150,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F068.B1.FLU.A.0.C.N.Z.Z.Z.Z.6.0.M": {
+      "path": "series/F068.B1.FLU.A.0.C.N.Z.Z.Z.Z.6.0.M.json",
+      "name": "Mineras",
       "frequency": "MONTHLY",
       "last_observation": "2026-08-01",
-      "observation_count": 1180,
-      "fetched_at": "2026-09-26T18:06:36Z",
+      "observation_count": 284,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F068.B1.FLU.C.0.C.N.Z.Z.Z.Z.6.0.M": {
+      "path": "series/F068.B1.FLU.C.0.C.N.Z.Z.Z.Z.6.0.M.json",
+      "name": "Industriales",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 284,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F068.B1.FLU.B.0.C.N.Z.Z.Z.Z.6.0.M": {
+      "path": "series/F068.B1.FLU.B.0.C.N.Z.Z.Z.Z.6.0.M.json",
+      "name": "Agropecuario, silvícola y pesquero",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 284,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F068.B1.FLU.Z.0.M.N.K.Z.Z.Z.6.0.M": {
+      "path": "series/F068.B1.FLU.Z.0.M.N.K.Z.Z.Z.6.0.M.json",
+      "name": "Bienes de capital",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 284,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F068.B1.FLU.Z.0.M.N.E.Z.Z.Z.6.0.M": {
+      "path": "series/F068.B1.FLU.Z.0.M.N.E.Z.Z.Z.6.0.M.json",
+      "name": "Bienes intermedios",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 284,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F068.B1.FLU.Z.0.M.N.A.Z.Z.Z.6.0.M": {
+      "path": "series/F068.B1.FLU.Z.0.M.N.A.Z.Z.Z.6.0.M.json",
+      "name": "Bienes de consumo",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 284,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F068.U23.INC.A.0.C.Z.Z.Z.Z.Z.18.0.T": {
+      "path": "series/F068.U23.INC.A.0.C.Z.Z.Z.Z.Z.18.0.T.json",
+      "name": "Mineras",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 54,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F068.U23.INC.C.0.C.Z.Z.Z.Z.Z.18.0.T": {
+      "path": "series/F068.U23.INC.C.0.C.Z.Z.Z.Z.Z.18.0.T.json",
+      "name": "Industriales",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 54,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F068.U23.INC.B.0.C.Z.Z.Z.Z.Z.18.0.T": {
+      "path": "series/F068.U23.INC.B.0.C.Z.Z.Z.Z.Z.18.0.T.json",
+      "name": "Agropecuarios, silvícolas y pesqueros",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 54,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F068.U33.INC.Z.0.M.Z.K.Z.Z.Z.18.0.T": {
+      "path": "series/F068.U33.INC.Z.0.M.Z.K.Z.Z.Z.18.0.T.json",
+      "name": "Bienes de capital",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 54,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F068.U33.INC.Z.0.M.Z.E.Z.Z.Z.18.0.T": {
+      "path": "series/F068.U33.INC.Z.0.M.Z.E.Z.Z.Z.18.0.T.json",
+      "name": "Bienes intermedios",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 54,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F068.U33.INC.Z.0.M.Z.A.Z.Z.Z.18.0.T": {
+      "path": "series/F068.U33.INC.Z.0.M.Z.A.Z.Z.Z.18.0.T.json",
+      "name": "Bienes de consumo",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 54,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F068.G.FLU.Z.0.S.N.Z.T.Z.Z.6.0.M": {
+      "path": "series/F068.G.FLU.Z.0.S.N.Z.T.Z.Z.6.0.M.json",
+      "name": "Cuenta financiera",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-07-01",
+      "observation_count": 283,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F068.E1.FLU.Z.0.S.N.Z.Z.Z.Z.6.0.T": {
+      "path": "series/F068.E1.FLU.Z.0.S.N.Z.Z.Z.Z.6.0.T.json",
+      "name": "Cuenta corriente más cuenta capital",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 94,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F068.A.PFA18.Z.0.S.N.Z.Z.Z.Z.6.0.T": {
+      "path": "series/F068.A.PFA18.Z.0.S.N.Z.Z.Z.Z.6.0.T.json",
+      "name": "Cuenta corriente, porcentaje del PIB",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 91,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F033.FKF.PPB.Z.Z.2018.0.T": {
+      "path": "series/F033.FKF.PPB.Z.Z.2018.0.T.json",
+      "name": "FBKF",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 119,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F068.G1.FAA.Z.0.S.P.Z.T.Z.Z.6.0.T": {
+      "path": "series/F068.G1.FAA.Z.0.S.P.Z.T.Z.Z.6.0.T.json",
+      "name": "Inversión directa pasivos, últimos 12 meses, millones de USD",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 91,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F032.PIB.FAA.N.USD.2018.Z.Z.0.T": {
+      "path": "series/F032.PIB.FAA.N.USD.2018.Z.Z.0.T.json",
+      "name": "PIB, últimos 12 meses, millones de USD",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 119,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F068.P.PFA18.Z.0.S.N.Z.T.Z.Z.6.0.T": {
+      "path": "series/F068.P.PFA18.Z.0.S.N.Z.T.Z.Z.6.0.T.json",
+      "name": "PII porcentaje del PIB",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 74,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F068.T6.STO.Z.IED.S.P.Z.T.Z.Z.6.0.M": {
+      "path": "series/F068.T6.STO.Z.IED.S.P.Z.T.Z.Z.6.0.M.json",
+      "name": "Empresas de Inversión directa",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-07-01",
+      "observation_count": 283,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F068.T6.STO.Z.Q1.S.P.Z.T.Z.Z.6.0.M": {
+      "path": "series/F068.T6.STO.Z.Q1.S.P.Z.T.Z.Z.6.0.M.json",
+      "name": "Resto Empresas",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-07-01",
+      "observation_count": 283,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F068.T6.STO.Z.P.S.P.Z.T.Z.Z.6.0.M": {
+      "path": "series/F068.T6.STO.Z.P.S.P.Z.T.Z.Z.6.0.M.json",
+      "name": "Otras sociedades financieras",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-07-01",
+      "observation_count": 283,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F068.T6.STO.Z.S1.S.P.Z.T.Z.Z.6.0.M": {
+      "path": "series/F068.T6.STO.Z.S1.S.P.Z.T.Z.Z.6.0.M.json",
+      "name": "Bancos",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-07-01",
+      "observation_count": 283,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F068.T6.STO.Z.B.S.P.Z.T.Z.Z.6.0.M": {
+      "path": "series/F068.T6.STO.Z.B.S.P.Z.T.Z.Z.6.0.M.json",
+      "name": "Banco Central",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-07-01",
+      "observation_count": 283,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F068.T6.STO.Z.A.S.P.Z.T.Z.Z.6.0.M": {
+      "path": "series/F068.T6.STO.Z.A.S.P.Z.T.Z.Z.6.0.M.json",
+      "name": "Gobierno General",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-07-01",
+      "observation_count": 283,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F049.OCU.PMT.INE9.01.M": {
+      "path": "series/F049.OCU.PMT.INE9.01.M.json",
+      "name": "Empleo (miles de personas)",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-07-01",
+      "observation_count": 197,
+      "fetched_at": "2026-09-27T03:31:14Z",
       "status": "ok"
     },
     "F049.DES.TAS.INE9.10.M": {
       "path": "series/F049.DES.TAS.INE9.10.M.json",
-      "name": "Tasa de desocupación, total | No Ajustada | INE | Mensual | Porcentaje",
+      "name": "Tasa desempleo (porcentaje)",
       "frequency": "MONTHLY",
       "last_observation": "2026-07-01",
       "observation_count": 197,
-      "fetched_at": "2026-09-26T18:06:36Z",
+      "fetched_at": "2026-09-27T03:31:14Z",
       "status": "ok"
     },
-    "F032.IMC.IND.Z.Z.EP18.Z.Z.0.M": {
-      "path": "series/F032.IMC.IND.Z.Z.EP18.Z.Z.0.M.json",
-      "name": "Imacec empalmado, serie original (índice 2018=100)",
+    "G049.RMM.V12.INE23.NE.M": {
+      "path": "series/G049.RMM.V12.INE23.NE.M.json",
+      "name": "Índice general de remuneraciones",
       "frequency": "MONTHLY",
       "last_observation": "2026-07-01",
-      "observation_count": 367,
-      "fetched_at": "2026-09-26T18:06:36Z",
+      "observation_count": 199,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "G049.CMH.V12.INE23.NE.M": {
+      "path": "series/G049.CMH.V12.INE23.NE.M.json",
+      "name": "Índice de costo de la mano de obra por hora",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-07-01",
+      "observation_count": 199,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F074.IPC.V12.Z.EP23.C.M": {
+      "path": "series/F074.IPC.V12.Z.EP23.C.M.json",
+      "name": "IPC, variación anual",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 188,
+      "fetched_at": "2026-09-27T03:31:14Z",
       "status": "ok"
     },
     "F022.TPM.TIN.D001.NO.Z.D": {
       "path": "series/F022.TPM.TIN.D001.NO.Z.D.json",
-      "name": "Tasa de política monetaria (TPM) (porcentaje)",
+      "name": "TPM",
       "frequency": "DAILY",
       "last_observation": "2026-09-28",
       "observation_count": 7395,
-      "fetched_at": "2026-09-26T18:06:36Z",
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F022.VIV.TIP.MA03.UF.Z.M": {
+      "path": "series/F022.VIV.TIP.MA03.UF.Z.M.json",
+      "name": "Vivienda",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 296,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F022.COM.TIP.Z.NO.Z.M": {
+      "path": "series/F022.COM.TIP.Z.NO.Z.M.json",
+      "name": "Comerciales",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 296,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F022.CMX.TIP.Z.US.Z.M": {
+      "path": "series/F022.CMX.TIP.Z.US.Z.M.json",
+      "name": "Comercio exterior",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 296,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F022.CON.TIP.Z.NO.Z.M": {
+      "path": "series/F022.CON.TIP.Z.NO.Z.M.json",
+      "name": "Consumo",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 296,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F073.TCM.IND.199502.D": {
+      "path": "series/F073.TCM.IND.199502.D.json",
+      "name": "TCM (2 de enero 1998=100)",
+      "frequency": "DAILY",
+      "last_observation": "2026-09-28",
+      "observation_count": 7909,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F073.TM5.IND.199001.D": {
+      "path": "series/F073.TM5.IND.199001.D.json",
+      "name": "TCM-5 (2 de enero 1998=100)",
+      "frequency": "DAILY",
+      "last_observation": "2026-09-28",
+      "observation_count": 6167,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F073.TCO.PRE.HIST.M": {
+      "path": "series/F073.TCO.PRE.HIST.M.json",
+      "name": "TCO (pesos por dólar)",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 800,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F073.TCR.IND.199101.M": {
+      "path": "series/F073.TCR.IND.199101.M.json",
+      "name": "TCR",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 488,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F021.M1.PRO.N.CLP.5.M": {
+      "path": "series/F021.M1.PRO.N.CLP.5.M.json",
+      "name": "M1",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 729,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F021.M2.PRO.N.CLP.5.M": {
+      "path": "series/F021.M2.PRO.N.CLP.5.M.json",
+      "name": "M2",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 488,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F021.M3.PRO.N.CLP.5.M": {
+      "path": "series/F021.M3.PRO.N.CLP.5.M.json",
+      "name": "M3",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 488,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F022.VIVBI.STO.Z.Z.CLP.M": {
+      "path": "series/F022.VIVBI.STO.Z.Z.CLP.M.json",
+      "name": "Vivienda",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 524,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F022.CMXBI.STO.Z.Z.CLP.M": {
+      "path": "series/F022.CMXBI.STO.Z.Z.CLP.M.json",
+      "name": "Comercio exterior",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 524,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F022.CONBI.STO.Z.Z.CLP.M": {
+      "path": "series/F022.CONBI.STO.Z.Z.CLP.M.json",
+      "name": "Consumo",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 524,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F022.CTOBI.STO.Z.Z.CLP.M": {
+      "path": "series/F022.CTOBI.STO.Z.Z.CLP.M.json",
+      "name": "Total",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 524,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F022.COMBI.STO.Z.Z.CLP.M": {
+      "path": "series/F022.COMBI.STO.Z.Z.CLP.M.json",
+      "name": "Comerciales",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 524,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F051.G21.PPI.C.Z.Z.T": {
+      "path": "series/F051.G21.PPI.C.Z.Z.T.json",
+      "name": "Balance gobierno central",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 90,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F051.D7.PPB.C.Z.Z.T": {
+      "path": "series/F051.D7.PPB.C.Z.Z.T.json",
+      "name": "Deuda bruta gobierno central",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-01-01",
+      "observation_count": 81,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F019.PIB.VPA.09.T": {
+      "path": "series/F019.PIB.VPA.09.T.json",
+      "name": "PIB socios comerciales",
+      "frequency": "QUARTERLY",
+      "last_observation": "2025-10-01",
+      "observation_count": 112,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F019.PPB.PRE.40.M": {
+      "path": "series/F019.PPB.PRE.40.M.json",
+      "name": "Cobre refinado BML",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 800,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F019.PPB.PRE.41B.M": {
+      "path": "series/F019.PPB.PRE.41B.M.json",
+      "name": "Petróleo WTI",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 488,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F033.TIBS.IND.Z.CLP.2018.0.T": {
+      "path": "series/F033.TIBS.IND.Z.CLP.2018.0.T.json",
+      "name": "Términos de intercambio (índice)",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 122,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F032.PIB.FLU.R.CLP.EP18.Z.Z.1.T": {
+      "path": "series/F032.PIB.FLU.R.CLP.EP18.Z.Z.1.T.json",
+      "name": "PIB, nivel desestacionalizado",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 122,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F032.IMC.IND.Z.Z.EP18.Z.Z.0.M": {
+      "path": "series/F032.IMC.IND.Z.Z.EP18.Z.Z.0.M.json",
+      "name": "IMACEC, índice original",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-07-01",
+      "observation_count": 367,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F074.IPC.VAR.Z.EP23.C.M": {
+      "path": "series/F074.IPC.VAR.Z.EP23.C.M.json",
+      "name": "IPC, variación mensual",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 200,
+      "fetched_at": "2026-09-27T03:31:14Z",
       "status": "ok"
     },
     "F073.TCO.PRE.Z.D": {
       "path": "series/F073.TCO.PRE.Z.D.json",
-      "name": "Tipo de cambio nominal (dólar observado $CLP/USD)\\ tipo de cambio \\ precio \\ diario \\ BCCh",
+      "name": "Dólar observado",
       "frequency": "DAILY",
       "last_observation": "2026-09-28",
       "observation_count": 11007,
-      "fetched_at": "2026-09-26T18:06:36Z",
+      "fetched_at": "2026-09-27T03:31:14Z",
       "status": "ok"
     },
     "F073.UFF.PRE.Z.D": {
       "path": "series/F073.UFF.PRE.Z.D.json",
-      "name": "Unidad de fomento (UF)",
+      "name": "UF",
       "frequency": "DAILY",
       "last_observation": "2026-10-09",
       "observation_count": 17967,
-      "fetched_at": "2026-09-26T18:06:36Z",
+      "fetched_at": "2026-09-27T03:31:14Z",
       "status": "ok"
     },
     "F073.UTR.PRE.Z.M": {
       "path": "series/F073.UTR.PRE.Z.M.json",
-      "name": "Unidad tributaria mensual (UTM)",
+      "name": "UTM",
       "frequency": "MONTHLY",
       "last_observation": "2026-10-01",
       "observation_count": 442,
-      "fetched_at": "2026-09-26T18:06:36Z",
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F049.DES.TAS.INE.10.M": {
+      "path": "series/F049.DES.TAS.INE.10.M.json",
+      "name": "Desocupación total",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-07-01",
+      "observation_count": 197,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F049.DES.TAS.INE.03.M": {
+      "path": "series/F049.DES.TAS.INE.03.M.json",
+      "name": "Desocupación femenina",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-07-01",
+      "observation_count": 197,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F049.DES.TAS.INE.02.M": {
+      "path": "series/F049.DES.TAS.INE.02.M.json",
+      "name": "Desocupación masculina",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-07-01",
+      "observation_count": 197,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F013.IBC.IND.N.7.LAC.CL.CLP.BLO.M": {
+      "path": "series/F013.IBC.IND.N.7.LAC.CL.CLP.BLO.M.json",
+      "name": "IPSA",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 440,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F051.E2.STO.H.Z.USD.T": {
+      "path": "series/F051.E2.STO.H.Z.USD.T.json",
+      "name": "Activos",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 82,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F051.E1.STO.H.Z.USD.T": {
+      "path": "series/F051.E1.STO.H.Z.USD.T.json",
+      "name": "Pasivos",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 82,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F051.E0.STO.H.Z.USD.T": {
+      "path": "series/F051.E0.STO.H.Z.USD.T.json",
+      "name": "Patrimonio",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 82,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F051.E2.PPIB18.H.Z.USD.T": {
+      "path": "series/F051.E2.PPIB18.H.Z.USD.T.json",
+      "name": "Activos",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 82,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F051.E1.PPIB18.H.Z.USD.T": {
+      "path": "series/F051.E1.PPIB18.H.Z.USD.T.json",
+      "name": "Pasivos",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 82,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F051.E0.PPIB18.H.Z.USD.T": {
+      "path": "series/F051.E0.PPIB18.H.Z.USD.T.json",
+      "name": "Patrimonio",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 82,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F062.A5.STO.PF.USD.M": {
+      "path": "series/F062.A5.STO.PF.USD.M.json",
+      "name": "Reservas internacionales",
+      "frequency": "MONTHLY",
+      "last_observation": "2026-08-01",
+      "observation_count": 536,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F051.C17.STO.C.Z.USD.T": {
+      "path": "series/F051.C17.STO.C.Z.USD.T.json",
+      "name": "Fondo de Compensación del Cobre",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 86,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F051.C14.STO.C.Z.USD.T": {
+      "path": "series/F051.C14.STO.C.Z.USD.T.json",
+      "name": "Fondo de Estabilización del Petróleo",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 82,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F051.C15.STO.C.Z.USD.T": {
+      "path": "series/F051.C15.STO.C.Z.USD.T.json",
+      "name": "Fondo de Reserva de Pensiones (FRP)",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 79,
+      "fetched_at": "2026-09-27T03:31:14Z",
+      "status": "ok"
+    },
+    "F051.C16.STO.C.Z.USD.T": {
+      "path": "series/F051.C16.STO.C.Z.USD.T.json",
+      "name": "Fondo de Estabilización Económica y Social (FEES)",
+      "frequency": "QUARTERLY",
+      "last_observation": "2026-04-01",
+      "observation_count": 78,
+      "fetched_at": "2026-09-27T03:31:14Z",
       "status": "ok"
     }
   }

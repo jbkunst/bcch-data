@@ -1,17 +1,189 @@
 series:
-  - id: F032.PIB.FLU.R.CLP.EP18.Z.Z.0.T
-    group: dashboard
-  - id: F074.IPC.IND.Z.EP09.C.M
-    group: dashboard
+  - id: F032.IMC.V12.Z.Z.2018.Z.Z.0.M
+    name: "Imacec (variación anual)"
+  - id: F032.IMC.VEL.Z.Z.2018.Z.Z.1.M
+    name: "Imacec desestacionalizado (promedio móvil de 3 meses)"
+  - id: F032.PIB.V12.R.Z.2018.Z.Z.0.T
+    name: "PIB, variación anual"
+  - id: F032.PIB.VAR.R.Z.2018.Z.Z.3.T
+    name: "PIB, variación trimestral desestacionalizada"
+  - id: F033.CPR.V12.R.Z.2018.0.T
+    name: "Consumo privado"
+  - id: F033.VAX.V12.R.Z.2018.0.T
+    name: "Variación de existencias"
+  - id: F033.COG.V12.R.Z.2018.0.T
+    name: "Consumo gobierno"
+  - id: F033.FKF.V12.R.Z.2018.0.T
+    name: "FBCF"
+  - id: F033.XBS.V12.R.Z.2018.0.T
+    name: "Contribución de exportaciones"
+  - id: F033.IBS.V12.R.Z.2018.0.T
+    name: "Contribución de importaciones"
+  - id: F038.AHO.PPB2.53.10.N.2018.CLP.T
+    name: "Hogares"
+  - id: F038.AHO.PPB2.20.10.N.2018.CLP.T
+    name: "Gobierno general"
+  - id: F038.AHO.PPB2.48.10.N.2018.CLP.T
+    name: "Sociedades financieras"
+  - id: F038.AHO.PPB2.52.10.N.2018.CLP.T
+    name: "Empresas no financieras"
+  - id: F038.AHO.PPB2.10.10.N.2018.CLP.T
+    name: "Economía nacional"
+  - id: F034.PMI.IND.INE.2018.0.M
+    name: "IPI Minería"
+  - id: F034.PRM.IND.INE.2018.0.M
+    name: "IPI Manufactura"
+  - id: F034.VCC.IND.INE.2018.0.M
+    name: "Total"
+  - id: F034.VDU.IND.INE.2018.0.M
+    name: "Durables"
+  - id: F034.VND.IND.INE.2018.0.M
+    name: "No durables"
+  - id: F068.B1.FLU.A.0.C.N.Z.Z.Z.Z.6.0.M
+    name: "Mineras"
+  - id: F068.B1.FLU.C.0.C.N.Z.Z.Z.Z.6.0.M
+    name: "Industriales"
+  - id: F068.B1.FLU.B.0.C.N.Z.Z.Z.Z.6.0.M
+    name: "Agropecuario, silvícola y pesquero"
+  - id: F068.B1.FLU.Z.0.M.N.K.Z.Z.Z.6.0.M
+    name: "Bienes de capital"
+  - id: F068.B1.FLU.Z.0.M.N.E.Z.Z.Z.6.0.M
+    name: "Bienes intermedios"
+  - id: F068.B1.FLU.Z.0.M.N.A.Z.Z.Z.6.0.M
+    name: "Bienes de consumo"
+  - id: F068.U23.INC.A.0.C.Z.Z.Z.Z.Z.18.0.T
+    name: "Mineras"
+  - id: F068.U23.INC.C.0.C.Z.Z.Z.Z.Z.18.0.T
+    name: "Industriales"
+  - id: F068.U23.INC.B.0.C.Z.Z.Z.Z.Z.18.0.T
+    name: "Agropecuarios, silvícolas y pesqueros"
+  - id: F068.U33.INC.Z.0.M.Z.K.Z.Z.Z.18.0.T
+    name: "Bienes de capital"
+  - id: F068.U33.INC.Z.0.M.Z.E.Z.Z.Z.18.0.T
+    name: "Bienes intermedios"
+  - id: F068.U33.INC.Z.0.M.Z.A.Z.Z.Z.18.0.T
+    name: "Bienes de consumo"
+  - id: F068.G.FLU.Z.0.S.N.Z.T.Z.Z.6.0.M
+    name: "Cuenta financiera"
+  - id: F068.E1.FLU.Z.0.S.N.Z.Z.Z.Z.6.0.T
+    name: "Cuenta corriente más cuenta capital"
+  - id: F068.A.PFA18.Z.0.S.N.Z.Z.Z.Z.6.0.T
+    name: "Cuenta corriente, porcentaje del PIB"
+  - id: F033.FKF.PPB.Z.Z.2018.0.T
+    name: "FBKF"
+  - id: F068.G1.FAA.Z.0.S.P.Z.T.Z.Z.6.0.T
+    name: "Inversión directa pasivos, últimos 12 meses, millones de USD"
+  - id: F032.PIB.FAA.N.USD.2018.Z.Z.0.T
+    name: "PIB, últimos 12 meses, millones de USD"
+  - id: F068.P.PFA18.Z.0.S.N.Z.T.Z.Z.6.0.T
+    name: "PII porcentaje del PIB"
+  - id: F068.T6.STO.Z.IED.S.P.Z.T.Z.Z.6.0.M
+    name: "Empresas de Inversión directa"
+  - id: F068.T6.STO.Z.Q1.S.P.Z.T.Z.Z.6.0.M
+    name: "Resto Empresas"
+  - id: F068.T6.STO.Z.P.S.P.Z.T.Z.Z.6.0.M
+    name: "Otras sociedades financieras"
+  - id: F068.T6.STO.Z.S1.S.P.Z.T.Z.Z.6.0.M
+    name: "Bancos"
+  - id: F068.T6.STO.Z.B.S.P.Z.T.Z.Z.6.0.M
+    name: "Banco Central"
+  - id: F068.T6.STO.Z.A.S.P.Z.T.Z.Z.6.0.M
+    name: "Gobierno General"
+  - id: F049.OCU.PMT.INE9.01.M
+    name: "Empleo (miles de personas)"
   - id: F049.DES.TAS.INE9.10.M
-    group: dashboard
-  - id: F032.IMC.IND.Z.Z.EP18.Z.Z.0.M
-    group: dashboard
+    name: "Tasa desempleo (porcentaje)"
+  - id: G049.RMM.V12.INE23.NE.M
+    name: "Índice general de remuneraciones"
+  - id: G049.CMH.V12.INE23.NE.M
+    name: "Índice de costo de la mano de obra por hora"
+  - id: F074.IPC.V12.Z.EP23.C.M
+    name: "IPC, variación anual"
   - id: F022.TPM.TIN.D001.NO.Z.D
-    group: dashboard
+    name: "TPM"
+  - id: F022.VIV.TIP.MA03.UF.Z.M
+    name: "Vivienda"
+  - id: F022.COM.TIP.Z.NO.Z.M
+    name: "Comerciales"
+  - id: F022.CMX.TIP.Z.US.Z.M
+    name: "Comercio exterior"
+  - id: F022.CON.TIP.Z.NO.Z.M
+    name: "Consumo"
+  - id: F073.TCM.IND.199502.D
+    name: "TCM (2 de enero 1998=100)"
+  - id: F073.TM5.IND.199001.D
+    name: "TCM-5 (2 de enero 1998=100)"
+  - id: F073.TCO.PRE.HIST.M
+    name: "TCO (pesos por dólar)"
+  - id: F073.TCR.IND.199101.M
+    name: "TCR"
+  - id: F021.M1.PRO.N.CLP.5.M
+    name: "M1"
+  - id: F021.M2.PRO.N.CLP.5.M
+    name: "M2"
+  - id: F021.M3.PRO.N.CLP.5.M
+    name: "M3"
+  - id: F022.VIVBI.STO.Z.Z.CLP.M
+    name: "Vivienda"
+  - id: F022.CMXBI.STO.Z.Z.CLP.M
+    name: "Comercio exterior"
+  - id: F022.CONBI.STO.Z.Z.CLP.M
+    name: "Consumo"
+  - id: F022.CTOBI.STO.Z.Z.CLP.M
+    name: "Total"
+  - id: F022.COMBI.STO.Z.Z.CLP.M
+    name: "Comerciales"
+  - id: F051.G21.PPI.C.Z.Z.T
+    name: "Balance gobierno central"
+  - id: F051.D7.PPB.C.Z.Z.T
+    name: "Deuda bruta gobierno central"
+  - id: F019.PIB.VPA.09.T
+    name: "PIB socios comerciales"
+  - id: F019.PPB.PRE.40.M
+    name: "Cobre refinado BML"
+  - id: F019.PPB.PRE.41B.M
+    name: "Petróleo WTI"
+  - id: F033.TIBS.IND.Z.CLP.2018.0.T
+    name: "Términos de intercambio (índice)"
+  - id: F032.PIB.FLU.R.CLP.EP18.Z.Z.1.T
+    name: "PIB, nivel desestacionalizado"
+  - id: F032.IMC.IND.Z.Z.EP18.Z.Z.0.M
+    name: "IMACEC, índice original"
+  - id: F074.IPC.VAR.Z.EP23.C.M
+    name: "IPC, variación mensual"
   - id: F073.TCO.PRE.Z.D
-    group: dashboard
+    name: "Dólar observado"
   - id: F073.UFF.PRE.Z.D
-    group: dashboard
+    name: "UF"
   - id: F073.UTR.PRE.Z.M
-    group: dashboard
+    name: "UTM"
+  - id: F049.DES.TAS.INE.10.M
+    name: "Desocupación total"
+  - id: F049.DES.TAS.INE.03.M
+    name: "Desocupación femenina"
+  - id: F049.DES.TAS.INE.02.M
+    name: "Desocupación masculina"
+  - id: F013.IBC.IND.N.7.LAC.CL.CLP.BLO.M
+    name: "IPSA"
+  - id: F051.E2.STO.H.Z.USD.T
+    name: "Activos"
+  - id: F051.E1.STO.H.Z.USD.T
+    name: "Pasivos"
+  - id: F051.E0.STO.H.Z.USD.T
+    name: "Patrimonio"
+  - id: F051.E2.PPIB18.H.Z.USD.T
+    name: "Activos"
+  - id: F051.E1.PPIB18.H.Z.USD.T
+    name: "Pasivos"
+  - id: F051.E0.PPIB18.H.Z.USD.T
+    name: "Patrimonio"
+  - id: F062.A5.STO.PF.USD.M
+    name: "Reservas internacionales"
+  - id: F051.C17.STO.C.Z.USD.T
+    name: "Fondo de Compensación del Cobre"
+  - id: F051.C14.STO.C.Z.USD.T
+    name: "Fondo de Estabilización del Petróleo"
+  - id: F051.C15.STO.C.Z.USD.T
+    name: "Fondo de Reserva de Pensiones (FRP)"
+  - id: F051.C16.STO.C.Z.USD.T
+    name: "Fondo de Estabilización Económica y Social (FEES)"

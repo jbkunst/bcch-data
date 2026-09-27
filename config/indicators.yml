@@ -1,0 +1,72 @@
+indicators:
+  - id: pib
+    name: "PIB, variación anual"
+    series_id: F032.PIB.V12.R.Z.2018.Z.Z.0.T
+    unit: "%"
+    digits: 2
+    prefix: ""
+    suffix: "%"
+    period_type: quarterly
+
+  - id: ipc
+    name: "IPC, variación anual"
+    series_id: F074.IPC.V12.Z.EP23.C.M
+    unit: "%"
+    digits: 2
+    prefix: ""
+    suffix: "%"
+    period_type: monthly
+
+  - id: desempleo
+    name: "Desocupación, sin ajuste estacional"
+    series_id: F049.DES.TAS.INE9.10.M
+    unit: "%"
+    digits: 2
+    prefix: ""
+    suffix: "%"
+    period_type: rolling_quarter
+
+  - id: imacec
+    name: "IMACEC, variación anual"
+    series_id: F032.IMC.V12.Z.Z.2018.Z.Z.0.M
+    unit: "%"
+    digits: 2
+    prefix: ""
+    suffix: "%"
+    period_type: monthly
+
+  - id: tpm
+    name: TPM
+    series_id: F022.TPM.TIN.D001.NO.Z.D
+    unit: "%"
+    digits: 2
+    prefix: ""
+    suffix: "%"
+    period_type: daily
+
+  - id: dolar
+    name: "Dólar observado"
+    series_id: F073.TCO.PRE.Z.D
+    unit: CLP/USD
+    digits: 2
+    prefix: ""
+    suffix: " $/USD"
+    period_type: daily
+
+  - id: uf
+    name: UF
+    series_id: F073.UFF.PRE.Z.D
+    unit: CLP
+    digits: 2
+    prefix: "$"
+    suffix: ""
+    period_type: daily
+
+  - id: utm
+    name: UTM
+    series_id: F073.UTR.PRE.Z.M
+    unit: CLP
+    digits: 0
+    prefix: "$"
+    suffix: ""
+    period_type: monthly

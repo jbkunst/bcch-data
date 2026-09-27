@@ -1,0 +1,94 @@
+{
+  "updated_at": "2026-09-27T03:31:14Z",
+  "indicator_count": 8,
+  "indicators": [
+    {
+      "id": "pib",
+      "name": "PIB, variación anual",
+      "series_id": "F032.PIB.V12.R.Z.2018.Z.Z.0.T",
+      "frequency": "QUARTERLY",
+      "value": -0.186313449202147,
+      "unit": "%",
+      "display_value": "-0,19%",
+      "reference_date": "2026-04-01",
+      "period": "2.º trimestre 2026"
+    },
+    {
+      "id": "ipc",
+      "name": "IPC, variación anual",
+      "series_id": "F074.IPC.V12.Z.EP23.C.M",
+      "frequency": "MONTHLY",
+      "value": 4.1,
+      "unit": "%",
+      "display_value": "4,10%",
+      "reference_date": "2026-08-01",
+      "period": "ago 2026"
+    },
+    {
+      "id": "desempleo",
+      "name": "Desocupación, sin ajuste estacional",
+      "series_id": "F049.DES.TAS.INE9.10.M",
+      "frequency": "MONTHLY",
+      "value": 9.52926654500883,
+      "unit": "%",
+      "display_value": "9,53%",
+      "reference_date": "2026-07-01",
+      "period": "may-jun-jul 2026"
+    },
+    {
+      "id": "imacec",
+      "name": "IMACEC, variación anual",
+      "series_id": "F032.IMC.V12.Z.Z.2018.Z.Z.0.M",
+      "frequency": "MONTHLY",
+      "value": -1.48711715004306,
+      "unit": "%",
+      "display_value": "-1,49%",
+      "reference_date": "2026-07-01",
+      "period": "jul 2026"
+    },
+    {
+      "id": "tpm",
+      "name": "TPM",
+      "series_id": "F022.TPM.TIN.D001.NO.Z.D",
+      "frequency": "DAILY",
+      "value": 4.5,
+      "unit": "%",
+      "display_value": "4,50%",
+      "reference_date": "2026-09-28",
+      "period": "28 sep 2026"
+    },
+    {
+      "id": "dolar",
+      "name": "Dólar observado",
+      "series_id": "F073.TCO.PRE.Z.D",
+      "frequency": "DAILY",
+      "value": 964.1,
+      "unit": "CLP/USD",
+      "display_value": "964,10 $/USD",
+      "reference_date": "2026-09-28",
+      "period": "28 sep 2026"
+    },
+    {
+      "id": "uf",
+      "name": "UF",
+      "series_id": "F073.UFF.PRE.Z.D",
+      "frequency": "DAILY",
+      "value": 41130.94,
+      "unit": "CLP",
+      "display_value": "$41.130,94",
+      "reference_date": "2026-10-09",
+      "period": "9 oct 2026"
+    },
+    {
+      "id": "utm",
+      "name": "UTM",
+      "series_id": "F073.UTR.PRE.Z.M",
+      "frequency": "MONTHLY",
+      "value": 72151,
+      "unit": "CLP",
+      "display_value": "$72.151",
+      "reference_date": "2026-10-01",
+      "period": "oct 2026"
+    }
+  ]
+}

@@ -1,12 +1,14 @@
 ---
-title: "Indicadores Financieros"
-author: "Datos del Banco Central de Chile"
+title: "Indicadores económicos"
 format:
   dashboard:
     scrolling: true
     theme: cosmo
+    css: studio.css
     embed-resources: true
     nav-buttons:
+      - icon: activity
+        href: api/v1/indicators.json
       - icon: database
         href: api/v1/manifest.json
 execute:
@@ -17,6 +19,16 @@ execute:
 
 ```{r}
 library(highcharter)
+
+chart_lang <- getOption("highcharter.lang")
+chart_lang$decimalPoint <- ","
+chart_lang$thousandsSep <- "."
+chart_lang$rangeSelectorZoom <- ""
+chart_lang$shortMonths <- c(
+  "ene", "feb", "mar", "abr", "may", "jun",
+  "jul", "ago", "sep", "oct", "nov", "dic"
+)
+options(highcharter.lang = chart_lang)
 
 find_project_root <- function(path = getwd()) {
   path <- normalizePath(path, mustWork = TRUE)
@@ -30,6 +42,11 @@ find_project_root <- function(path = getwd()) {
 
 project_root <- find_project_root()
 series_dir <- file.path(project_root, "api", "v1", "series")
+indicators_payload <- jsonlite::read_json(
+  file.path(project_root, "api", "v1", "indicators.json"),
+  simplifyVector = TRUE
+)
+indicators <- indicators_payload$indicators
 
 read_series <- function(id) {
   payload <- jsonlite::read_json(
@@ -42,114 +59,289 @@ read_series <- function(id) {
   )
 }
 
-annual_change <- function(data, periods) {
-  data$value <- 100 * (data$value / c(rep(NA_real_, periods), head(data$value, -periods)) - 1)
-  data
-}
-
 format_percent <- function(x) scales::percent(x / 100, accuracy = 0.1, decimal.mark = ",")
 format_number <- function(x) scales::number(x, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
 format_currency <- function(x) scales::dollar(x, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
 
-make_chart <- function(id, label, transform = identity, formatter = format_number) {
-  data <- transform(read_series(id))
+make_chart <- function(
+  id,
+  label,
+  formatter = format_number,
+  value_suffix = "",
+  value_decimals = 2,
+  zero_line = FALSE
+) {
+  data <- read_series(id)
   data <- data[is.finite(data$value), , drop = FALSE]
   last_date <- max(data$date)
   first_date <- seq(last_date, by = "-5 years", length.out = 2L)[[2L]]
   visible <- data[data$date >= first_date, , drop = FALSE]
   latest <- tail(visible$value, 1L)
+  plot_lines <- if (zero_line) {
+    list(list(value = 0, color = "#c6a15b", width = 1, zIndex = 2))
+  } else {
+    list()
+  }
 
-  highcharter::hchart(visible, "line", highcharter::hcaes(x = date, y = value), name = label) |>
-    highcharter::hc_title(text = formatter(latest)) |>
-    highcharter::hc_subtitle(text = paste0(label, " · último dato: ", format(last_date, "%d-%m-%Y"))) |>
-    highcharter::hc_chart(zoomType = "x") |>
-    highcharter::hc_xAxis(type = "datetime", ordinal = FALSE, title = list(text = NULL)) |>
-    highcharter::hc_yAxis(title = list(text = NULL), opposite = TRUE) |>
-    highcharter::hc_plotOptions(series = list(connectNulls = TRUE, marker = list(enabled = FALSE))) |>
+  highcharter::hchart(
+    visible,
+    "line",
+    highcharter::hcaes(x = date, y = value),
+    name = label
+  ) |>
+    highcharter::hc_chart(
+      backgroundColor = "transparent",
+      zoomType = "x",
+      spacing = c(8, 8, 4, 8)
+    ) |>
+    highcharter::hc_title(
+      text = formatter(latest),
+      align = "left",
+      style = list(
+        color = "#003b5c",
+        fontFamily = "IBM Plex Serif, Georgia, serif",
+        fontSize = "30px",
+        fontWeight = "500"
+      )
+    ) |>
+    highcharter::hc_subtitle(
+      text = paste0(label, " · último dato: ", format(last_date, "%d-%m-%Y")),
+      align = "left",
+      style = list(color = "#53636d", fontSize = "12px")
+    ) |>
+    highcharter::hc_xAxis(
+      type = "datetime",
+      ordinal = FALSE,
+      title = list(text = NULL),
+      lineWidth = 0,
+      tickWidth = 0,
+      labels = list(style = list(color = "#53636d", fontSize = "11px")),
+      events = list(
+        afterSetExtremes = highcharter::JS(
+          "function (event) { window.syncDashboardExtremes(event); }"
+        )
+      )
+    ) |>
+    highcharter::hc_yAxis(
+      title = list(text = ""),
+      opposite = TRUE,
+      gridLineColor = "#e7ebee",
+      plotLines = plot_lines,
+      labels = list(style = list(color = "#53636d", fontSize = "11px"))
+    ) |>
+    highcharter::hc_plotOptions(
+      series = list(
+        animation = FALSE,
+        connectNulls = TRUE,
+        lineWidth = 2,
+        marker = list(enabled = FALSE),
+        states = list(hover = list(lineWidthPlus = 0))
+      )
+    ) |>
+    highcharter::hc_tooltip(
+      shared = TRUE,
+      valueDecimals = value_decimals,
+      valueSuffix = value_suffix,
+      xDateFormat = "%d %b %Y"
+    ) |>
     highcharter::hc_rangeSelector(
       selected = 1,
       inputEnabled = FALSE,
+      buttonTheme = list(
+        fill = "transparent",
+        stroke = "#d8dee7",
+        style = list(color = "#53636d", fontSize = "10px"),
+        states = list(select = list(fill = "#eaf6fa", style = list(color = "#003b5c")))
+      ),
       buttons = list(
         list(type = "ytd", text = "YTD"),
         list(type = "year", count = 1, text = "1a"),
         list(type = "year", count = 5, text = "5a")
       )
     ) |>
-    highcharter::hc_navigator(enabled = TRUE, height = 24) |>
+    highcharter::hc_navigator(
+      enabled = TRUE,
+      height = 24,
+      maskFill = "rgba(0, 59, 92, 0.08)",
+      series = list(color = "#75bddb", lineWidth = 1)
+    ) |>
     highcharter::hc_scrollbar(enabled = FALSE) |>
+    highcharter::hc_legend(enabled = FALSE) |>
     highcharter::hc_exporting(enabled = FALSE) |>
-    highcharter::hc_colors("#0c1c32")
+    highcharter::hc_credits(enabled = FALSE) |>
+    highcharter::hc_colors("#003b5c")
 }
 ```
 
-## Row
+```{js}
+window.syncDashboardExtremes = function (event) {
+  if (!event || event.trigger === "syncDashboard" || window.dashboardSyncing) return;
+  if (typeof event.min !== "number" || typeof event.max !== "number") return;
+
+  var sourceAxis = event.target;
+  if (!sourceAxis || !sourceAxis.chart || !window.Highcharts) return;
+
+  window.dashboardSyncing = true;
+  try {
+    Highcharts.charts.forEach(function (chart) {
+      if (!chart || chart === sourceAxis.chart || !chart.xAxis || !chart.xAxis[0]) return;
+      chart.xAxis[0].setExtremes(
+        event.min,
+        event.max,
+        true,
+        false,
+        { trigger: "syncDashboard" }
+      );
+    });
+  } finally {
+    window.dashboardSyncing = false;
+  }
+};
+```
+
+```{r}
+#| results: asis
+updated_at <- as.POSIXct(
+  indicators_payload$updated_at,
+  format = "%Y-%m-%dT%H:%M:%SZ",
+  tz = "UTC"
+)
+updated_label <- format(updated_at, "%d-%m-%Y · %H:%M UTC")
+
+indicator_items <- vapply(seq_len(nrow(indicators)), function(index) {
+  item <- indicators[index, , drop = FALSE]
+  paste0(
+    '<span class="navbar-indicator">',
+    '<span>', htmltools::htmlEscape(item$name), '</span>',
+    '<strong>', htmltools::htmlEscape(item$display_value), '</strong>',
+    '<small>', htmltools::htmlEscape(item$period), '</small>',
+    '</span>'
+  )
+}, character(1))
+
+cat(
+  '<header class="studio-hero">',
+  '<p class="studio-eyebrow">Chile · panorama económico</p>',
+  '<h1>Indicadores económicos</h1>',
+  '<p>Una vista compacta de actividad, precios, mercado laboral, tasas y unidades de cuenta.</p>',
+  '<small>Actualizado ', updated_label, '</small>',
+  '</header>',
+  '<div id="navbar-ticker-source" class="navbar-ticker" tabindex="0" role="region" ',
+  'aria-label="Últimos indicadores. Toca o enfoca para pausar la cinta.">',
+  '<div class="navbar-ticker-track">',
+  '<div class="navbar-ticker-group">', paste(indicator_items, collapse = ""), '</div>',
+  '<div class="navbar-ticker-group" aria-hidden="true">', paste(indicator_items, collapse = ""), '</div>',
+  '</div></div>',
+  '<script>',
+  'document.addEventListener("DOMContentLoaded", function () {',
+  '  var ticker = document.getElementById("navbar-ticker-source");',
+  '  var links = document.querySelector(".quarto-dashboard-links");',
+  '  if (ticker && links) links.before(ticker);',
+  '});',
+  'document.addEventListener("click", function (event) {',
+  '  var ticker = event.target.closest(".navbar-ticker");',
+  '  if (ticker) ticker.classList.toggle("is-paused");',
+  '});',
+  '</script>'
+)
+```
+
+## Row {height=420}
 
 ### PIB
 
 ```{r}
 make_chart(
-  "F032.PIB.FLU.R.CLP.EP18.Z.Z.0.T",
+  "F032.PIB.V12.R.Z.2018.Z.Z.0.T",
   "PIB · variación interanual",
-  transform = function(x) annual_change(x, 4L),
-  formatter = format_percent
+  formatter = format_percent,
+  value_suffix = "%",
+  zero_line = TRUE
 )
 ```
 
 ### IPC
 
 ```{r}
-make_chart("F074.IPC.IND.Z.EP09.C.M", "IPC · variación interanual", formatter = format_percent)
+make_chart(
+  "F074.IPC.V12.Z.EP23.C.M",
+  "IPC · variación interanual",
+  formatter = format_percent,
+  value_suffix = "%",
+  zero_line = TRUE
+)
 ```
 
-## Row
+## Row {height=420}
 
 ### Desempleo
 
 ```{r}
-make_chart("F049.DES.TAS.INE9.10.M", "Tasa de desempleo", formatter = format_percent)
+make_chart(
+  "F049.DES.TAS.INE9.10.M",
+  "Tasa de desempleo",
+  formatter = format_percent,
+  value_suffix = "%"
+)
 ```
 
 ### IMACEC
 
 ```{r}
 make_chart(
-  "F032.IMC.IND.Z.Z.EP18.Z.Z.0.M",
+  "F032.IMC.V12.Z.Z.2018.Z.Z.0.M",
   "IMACEC · variación interanual",
-  transform = function(x) annual_change(x, 12L),
-  formatter = format_percent
+  formatter = format_percent,
+  value_suffix = "%",
+  zero_line = TRUE
 )
 ```
 
-## Row
+## Row {height=420}
 
 ### TPM
 
 ```{r}
-make_chart("F022.TPM.TIN.D001.NO.Z.D", "Tasa de política monetaria", formatter = format_percent)
+make_chart(
+  "F022.TPM.TIN.D001.NO.Z.D",
+  "Tasa de política monetaria",
+  formatter = format_percent,
+  value_suffix = "%"
+)
 ```
 
 ### Dólar observado
 
 ```{r}
 make_chart(
-  "F073.TCO.PRE.Z.D", "Dólar observado · CLP/USD",
-  formatter = function(x) paste0(format_number(x), " $/USD")
+  "F073.TCO.PRE.Z.D",
+  "Dólar observado · CLP/USD",
+  formatter = function(x) paste0(format_number(x), " $/USD"),
+  value_suffix = " $/USD"
 )
 ```
 
-## Row
+## Row {height=420}
 
 ### UF
 
 ```{r}
-make_chart("F073.UFF.PRE.Z.D", "Unidad de Fomento", formatter = format_currency)
+make_chart(
+  "F073.UFF.PRE.Z.D",
+  "Unidad de Fomento",
+  formatter = format_currency,
+  value_suffix = " CLP"
+)
 ```
 
 ### UTM
 
 ```{r}
 make_chart(
-  "F073.UTR.PRE.Z.M", "Unidad Tributaria Mensual",
-  formatter = function(x) scales::dollar(x, accuracy = 1, big.mark = ".", decimal.mark = ",")
+  "F073.UTR.PRE.Z.M",
+  "Unidad Tributaria Mensual",
+  formatter = function(x) scales::dollar(x, accuracy = 1, big.mark = ".", decimal.mark = ","),
+  value_suffix = " CLP",
+  value_decimals = 0
 )
 ```
