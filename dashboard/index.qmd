@@ -18,6 +18,7 @@ execute:
 ---
 
 ```{r}
+#| label: setup
 library(highcharter)
 
 chart_lang <- getOption("highcharter.lang")
@@ -143,6 +144,7 @@ make_chart <- function(
       xDateFormat = "%d %b %Y"
     ) |>
     highcharter::hc_rangeSelector(
+      enabled = TRUE,
       selected = 1,
       inputEnabled = FALSE,
       buttonTheme = list(
@@ -174,8 +176,6 @@ make_chart <- function(
           condition = list(maxWidth = 360),
           chartOptions = list(
             chart = list(spacing = c(4, 4, 2, 4)),
-            rangeSelector = list(enabled = FALSE),
-            navigator = list(enabled = FALSE),
             xAxis = list(labels = list(enabled = FALSE), tickLength = 0),
             yAxis = list(
               labels = list(enabled = FALSE),
@@ -190,6 +190,7 @@ make_chart <- function(
 ```
 
 ```{r}
+#| label: dashboard-hero
 #| results: asis
 updated_at <- as.POSIXct(
   indicators_payload$updated_at,
@@ -241,6 +242,7 @@ cat(
 ### PIB
 
 ```{r}
+#| label: chart-pib
 make_chart(
   "F032.PIB.V12.R.Z.2018.Z.Z.0.T",
   "PIB · variación interanual",
@@ -253,6 +255,7 @@ make_chart(
 ### IPC
 
 ```{r}
+#| label: chart-ipc
 make_chart(
   "F074.IPC.V12.Z.EP23.C.M",
   "IPC · variación interanual",
@@ -265,6 +268,7 @@ make_chart(
 ### Desempleo
 
 ```{r}
+#| label: chart-unemployment
 make_chart(
   "F049.DES.TAS.INE9.10.M",
   "Tasa de desempleo",
@@ -276,6 +280,7 @@ make_chart(
 ### IMACEC
 
 ```{r}
+#| label: chart-imacec
 make_chart(
   "F032.IMC.V12.Z.Z.2018.Z.Z.0.M",
   "IMACEC · variación interanual",
@@ -290,6 +295,7 @@ make_chart(
 ### TPM
 
 ```{r}
+#| label: chart-tpm
 make_chart(
   "F022.TPM.TIN.D001.NO.Z.D",
   "Tasa de política monetaria",
@@ -301,6 +307,7 @@ make_chart(
 ### Dólar observado
 
 ```{r}
+#| label: chart-usd
 make_chart(
   "F073.TCO.PRE.Z.D",
   "Dólar observado · CLP/USD",
@@ -312,6 +319,7 @@ make_chart(
 ### UF
 
 ```{r}
+#| label: chart-uf
 make_chart(
   "F073.UFF.PRE.Z.D",
   "Unidad de Fomento",
@@ -323,6 +331,7 @@ make_chart(
 ### UTM
 
 ```{r}
+#| label: chart-utm
 make_chart(
   "F073.UTR.PRE.Z.M",
   "Unidad Tributaria Mensual",
