@@ -5,6 +5,74 @@ log_inform <- function(message, .envir = parent.frame()) {
   cli::cli_inform(paste0("[", format(Sys.time(), "%H:%M:%S"), "] ", message))
 }
 
+enrichment_version <- 3L
+
+collapse_parts <- function(parts, matches) {
+  values <- parts[matches]
+  if (length(values)) paste(values, collapse = " · ") else NA_character_
+}
+
+enrich_title <- function(title) {
+  parts <- trimws(strsplit(title, "\\s*[|\\\\]\\s*")[[1]])
+  parts <- parts[nzchar(parts)]
+
+  if (!length(parts)) {
+    return(c(
+      display_name = NA_character_,
+      measure = NA_character_,
+      unit = NA_character_,
+      adjustment = NA_character_,
+      source = NA_character_
+    ))
+  }
+
+  details <- parts[-1L]
+  normalized <- iconv(tolower(details), to = "ASCII//TRANSLIT")
+  frequency_match <- grepl(
+    "^(diari[oa]|semanal|mensual|trimestral|semestral|anual)$",
+    normalized
+  )
+  adjustment_match <- grepl(
+    "estacional|desestacional|tendencia|ciclo|original|ajustad",
+    normalized
+  )
+  source_match <- grepl(
+    "^(bcch|ine|fmi|imf|ocde|oecd|bcentral|banco central|ministerio|superintendencia)",
+    normalized
+  )
+  adjustment_match <- adjustment_match & !source_match
+  unit_match <- !source_match & !adjustment_match & grepl(
+    paste(
+      "porcentaje|indice|pesos?|dolares?|usd|clp|uf|utm|puntos?",
+      "millones?|miles?|numero|personas?|toneladas?|kilogramos?|hectareas?|unidad",
+      sep = "|"
+    ),
+    normalized
+  )
+  measure_match <- !(frequency_match | adjustment_match | source_match | unit_match)
+
+  c(
+    display_name = parts[[1]],
+    measure = collapse_parts(details, measure_match),
+    unit = collapse_parts(details, unit_match),
+    adjustment = collapse_parts(details, adjustment_match),
+    source = collapse_parts(details, source_match)
+  )
+}
+
+enrich_catalog <- function(metadata) {
+  editorial <- lapply(metadata$spanish_title, enrich_title)
+  editorial <- as.data.frame(do.call(rbind, editorial), stringsAsFactors = FALSE)
+  metadata[names(editorial)] <- editorial
+  metadata$enrichment_version <- enrichment_version
+  metadata
+}
+
+format_catalog_date <- function(value) {
+  dates <- suppressWarnings(as.Date(value))
+  ifelse(is.na(dates), NA_character_, format(dates, "%Y-%m-%d"))
+}
+
 format_indicator_value <- function(value, indicator) {
   number <- formatC(
     value,
@@ -74,6 +142,20 @@ cli::cli_alert_success("Loaded {length(series_ids)} unique series from {.path co
 cli::cli_h2("Reading BCCh metadata")
 cli::cli_alert_info("Checking that every configured ID exists in the BCCh catalog.")
 metadata <- bcchr::metadata(token = token, verbose = FALSE)
+catalog_fields <- c(
+  "series_id", "frequency", "spanish_title", "english_title",
+  "first_observation", "last_observation", "updated_at", "created_at"
+)
+missing_fields <- setdiff(catalog_fields, names(metadata))
+if (!is.data.frame(metadata) || nrow(metadata) == 0L || length(missing_fields) > 0L) {
+  cli::cli_abort(c(
+    "BCCh metadata does not satisfy the catalog contract.",
+    "x" = "Missing fields: {paste(missing_fields, collapse = ', ')}"
+  ))
+}
+if (anyDuplicated(metadata$series_id) || any(!nzchar(metadata$series_id))) {
+  cli::cli_abort("BCCh metadata contains missing or duplicate series IDs.")
+}
 unknown_ids <- setdiff(series_ids, metadata$series_id)
 if (length(unknown_ids) > 0L) {
   cli::cli_abort(c(
@@ -82,6 +164,22 @@ if (length(unknown_ids) > 0L) {
   ))
 }
 cli::cli_alert_success("All {length(series_ids)} IDs were found in BCCh metadata.")
+
+catalog_data <- enrich_catalog(metadata[catalog_fields])
+for (field in c("first_observation", "last_observation", "updated_at", "created_at")) {
+  catalog_data[[field]] <- format_catalog_date(catalog_data[[field]])
+}
+catalog_data <- catalog_data[c(
+  "series_id", "frequency", "spanish_title", "english_title",
+  "first_observation", "last_observation", "updated_at", "created_at",
+  "display_name", "measure", "unit", "adjustment", "source",
+  "enrichment_version"
+)]
+catalog_data <- catalog_data[order(catalog_data$series_id), , drop = FALSE]
+rownames(catalog_data) <- NULL
+cli::cli_alert_success(
+  "Prepared metadata for {nrow(catalog_data)} series with enrichment version {enrichment_version}."
+)
 
 cli::cli_h2("Downloading observations")
 cli::cli_alert_info("Downloading the complete history of {length(series_ids)} series.")
@@ -164,6 +262,80 @@ for (id in series_ids) {
   cli::cli_progress_update()
 }
 
+cli::cli_h2("Writing metadata catalog")
+catalog_path <- file.path("api", "v1", "catalog.json")
+canonical_json <- function(value) {
+  as.character(jsonlite::toJSON(
+    value,
+    auto_unbox = TRUE,
+    dataframe = "rows",
+    pretty = FALSE,
+    digits = NA,
+    na = "null"
+  ))
+}
+
+existing_catalog <- if (file.exists(catalog_path)) {
+  tryCatch(
+    jsonlite::read_json(catalog_path, simplifyVector = TRUE),
+    error = function(error) NULL
+  )
+} else {
+  NULL
+}
+existing_catalog_valid <-
+  is.list(existing_catalog) &&
+  isTRUE(existing_catalog$schema_version == 1L) &&
+  is.character(existing_catalog$updated_at) &&
+  length(existing_catalog$updated_at) == 1L &&
+  nzchar(existing_catalog$updated_at) &&
+  isTRUE(existing_catalog$series_count == nrow(catalog_data)) &&
+  is.data.frame(existing_catalog$series)
+
+candidate_records <- canonical_json(catalog_data)
+existing_records <- if (existing_catalog_valid) {
+  canonical_json(existing_catalog$series)
+} else {
+  NULL
+}
+catalog_changed <- !existing_catalog_valid || !identical(candidate_records, existing_records)
+catalog_updated_at <- if (catalog_changed) fetched_at else existing_catalog$updated_at
+catalog_payload <- list(
+  schema_version = 1L,
+  updated_at = catalog_updated_at,
+  series_count = nrow(catalog_data),
+  series = catalog_data
+)
+
+# Compact a legacy pretty-printed file once without changing its metadata version.
+catalog_needs_compaction <- file.exists(catalog_path) &&
+  length(readLines(catalog_path, n = 2L, warn = FALSE, encoding = "UTF-8")) > 1L
+
+if (catalog_changed || catalog_needs_compaction) {
+  jsonlite::write_json(
+    catalog_payload,
+    catalog_path,
+    auto_unbox = TRUE,
+    dataframe = "rows",
+    pretty = FALSE,
+    digits = NA,
+    na = "null"
+  )
+  if (catalog_changed) {
+    cli::cli_alert_success(
+      "Updated {nrow(catalog_data)} metadata records in {.path {catalog_path}}."
+    )
+  } else {
+    cli::cli_alert_success(
+      "Compacted {.path {catalog_path}} without changing its updated_at."
+    )
+  }
+} else {
+  cli::cli_alert_success(
+    "Catalog metadata is unchanged; preserved {.path {catalog_path}}."
+  )
+}
+
 cli::cli_h2("Writing indicators")
 indicator_payloads <- unname(lapply(indicators, function(indicator) {
   series <- payloads[[indicator$series_id]]
@@ -208,7 +380,11 @@ if (length(orphan_files) > 0L) {
 }
 
 manifest <- list(
+  schema_version = 1L,
   updated_at = fetched_at,
+  catalog_path = "catalog.json",
+  catalog_series_count = nrow(catalog_data),
+  catalog_updated_at = catalog_updated_at,
   series_count = length(series_ids),
   indicators_path = "indicators.json",
   indicator_count = length(indicator_payloads),
@@ -228,6 +404,8 @@ cli::cli_dl(
     "Series" = length(series_ids),
     "Observations" = sum(vapply(manifest_series, function(x) x$observation_count, numeric(1))),
     "Fetched at" = fetched_at,
+    "Catalog" = catalog_path,
+    "Catalog series" = nrow(catalog_data),
     "Manifest" = file.path("api", "v1", "manifest.json"),
     "Indicators" = indicators_path,
     "Series directory" = series_dir

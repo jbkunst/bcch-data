@@ -7,7 +7,7 @@ import argparse
 import json
 import math
 import sys
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 from urllib.parse import urljoin
@@ -50,6 +50,92 @@ def valid_number(value: Any) -> bool:
     )
 
 
+def parse_iso_date(value: Any, field: str, *, nullable: bool = False) -> date | None:
+    if value is None and nullable:
+        return None
+    require(isinstance(value, str), f"{field}: expected an ISO date")
+    try:
+        return date.fromisoformat(value)
+    except ValueError as error:
+        raise ApiError(f"{field}: invalid ISO date") from error
+
+
+def parse_iso_timestamp(value: Any, field: str) -> datetime:
+    require(isinstance(value, str), f"{field}: expected an ISO timestamp")
+    try:
+        return datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as error:
+        raise ApiError(f"{field}: invalid ISO timestamp") from error
+
+
+def validate_catalog(source: ApiSource, manifest: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    catalog_path = manifest.get("catalog_path")
+    require(catalog_path == "catalog.json", "unexpected catalog_path")
+    payload = source.read_json(catalog_path)
+    require(isinstance(payload, dict), "catalog.json must contain an object")
+    require(payload.get("schema_version") == 1, "unsupported catalog schema_version")
+    parse_iso_timestamp(payload.get("updated_at"), "catalog.updated_at")
+    require(
+        payload.get("updated_at") == manifest.get("catalog_updated_at"),
+        "manifest catalog_updated_at mismatch",
+    )
+
+    records = payload.get("series")
+    require(isinstance(records, list) and records, "catalog series must be a non-empty list")
+    require(payload.get("series_count") == len(records), "catalog series_count mismatch")
+    require(
+        manifest.get("catalog_series_count") == len(records),
+        "manifest catalog_series_count mismatch",
+    )
+
+    required_fields = {
+        "series_id", "frequency", "spanish_title", "english_title",
+        "first_observation", "last_observation", "updated_at", "created_at",
+        "display_name", "measure", "unit", "adjustment", "source",
+        "enrichment_version",
+    }
+    catalog: dict[str, dict[str, Any]] = {}
+    enrichment_versions: set[int] = set()
+    for index, record in enumerate(records):
+        label = f"catalog series[{index}]"
+        require(isinstance(record, dict), f"{label}: expected an object")
+        require(set(record) == required_fields, f"{label}: unexpected fields")
+        series_id = record.get("series_id")
+        require(isinstance(series_id, str) and series_id, f"{label}: invalid series_id")
+        require(series_id not in catalog, f"catalog: duplicate series_id {series_id}")
+        for field in ("frequency", "spanish_title", "english_title", "display_name"):
+            require(
+                isinstance(record.get(field), str) and bool(record[field]),
+                f"{series_id}: invalid {field}",
+            )
+        for field in ("measure", "unit", "adjustment", "source"):
+            value = record.get(field)
+            require(value is None or isinstance(value, str), f"{series_id}: invalid {field}")
+
+        first = parse_iso_date(
+            record.get("first_observation"),
+            f"{series_id}.first_observation",
+            nullable=True,
+        )
+        last = parse_iso_date(
+            record.get("last_observation"),
+            f"{series_id}.last_observation",
+            nullable=True,
+        )
+        if first is not None and last is not None:
+            require(first <= last, f"{series_id}: observation range is reversed")
+        parse_iso_date(record.get("updated_at"), f"{series_id}.updated_at")
+        parse_iso_date(record.get("created_at"), f"{series_id}.created_at")
+
+        version = record.get("enrichment_version")
+        require(isinstance(version, int) and version > 0, f"{series_id}: invalid enrichment_version")
+        enrichment_versions.add(version)
+        catalog[series_id] = record
+
+    require(len(enrichment_versions) == 1, "catalog mixes enrichment versions")
+    return catalog
+
+
 def validate_series(series_id: str, entry: dict[str, Any], payload: Any) -> None:
     require(isinstance(payload, dict), f"{series_id}: payload must be an object")
     require(payload.get("series_id") == series_id, f"{series_id}: wrong series_id")
@@ -82,10 +168,14 @@ def validate_series(series_id: str, entry: dict[str, Any], payload: Any) -> None
     require(payload.get("last_observation") == dates[-1], f"{series_id}: payload last date mismatch")
 
 
-def validate(root: str) -> tuple[int, int, int]:
+def validate(root: str) -> tuple[int, int, int, int]:
     source = ApiSource(root)
     manifest = source.read_json("manifest.json")
     require(isinstance(manifest, dict), "manifest.json must contain an object")
+    require(manifest.get("schema_version") == 1, "unsupported manifest schema_version")
+    parse_iso_timestamp(manifest.get("updated_at"), "manifest.updated_at")
+    parse_iso_timestamp(manifest.get("catalog_updated_at"), "manifest.catalog_updated_at")
+    catalog = validate_catalog(source, manifest)
     series = manifest.get("series")
     require(isinstance(series, dict) and series, "manifest series must be a non-empty object")
     require(manifest.get("series_count") == len(series), "manifest series_count mismatch")
@@ -99,6 +189,11 @@ def validate(root: str) -> tuple[int, int, int]:
         expected_path = f"series/{series_id}.json"
         require(entry.get("path") == expected_path, f"{series_id}: unexpected path")
         require(entry.get("status") == "ok", f"{series_id}: status is not ok")
+        require(series_id in catalog, f"{series_id}: missing from catalog")
+        require(
+            entry.get("frequency") == catalog[series_id].get("frequency"),
+            f"{series_id}: catalog frequency mismatch",
+        )
         payload = source.read_json(expected_path)
         validate_series(series_id, entry, payload)
         payloads[series_id] = payload
@@ -140,7 +235,7 @@ def validate(root: str) -> tuple[int, int, int]:
                 f"{indicator_id}: invalid {field}",
             )
 
-    return len(series), observation_count, len(indicators)
+    return len(catalog), len(series), observation_count, len(indicators)
 
 
 def main() -> int:
@@ -153,13 +248,14 @@ def main() -> int:
     )
     args = parser.parse_args()
     try:
-        series_count, observation_count, indicator_count = validate(args.root)
+        catalog_count, series_count, observation_count, indicator_count = validate(args.root)
     except ApiError as error:
         print(f"API validation failed: {error}", file=sys.stderr)
         return 1
     print(
         "API valid: "
-        f"{series_count} series, {observation_count} observations, "
+        f"{catalog_count} catalog entries, {series_count} cached series, "
+        f"{observation_count} observations, "
         f"{indicator_count} indicators ({args.root})"
     )
     return 0
