@@ -118,12 +118,7 @@ make_chart <- function(
       title = list(text = NULL),
       lineWidth = 0,
       tickWidth = 0,
-      labels = list(style = list(color = "#53636d", fontSize = "11px")),
-      events = list(
-        afterSetExtremes = highcharter::JS(
-          "function (event) { window.syncDashboardExtremes(event); }"
-        )
-      )
+      labels = list(style = list(color = "#53636d", fontSize = "11px"))
     ) |>
     highcharter::hc_yAxis(
       title = list(text = ""),
@@ -192,32 +187,6 @@ make_chart <- function(
       )
     )
 }
-```
-
-```{js}
-window.syncDashboardExtremes = function (event) {
-  if (!event || event.trigger === "syncDashboard" || window.dashboardSyncing) return;
-  if (typeof event.min !== "number" || typeof event.max !== "number") return;
-
-  var sourceAxis = event.target;
-  if (!sourceAxis || !sourceAxis.chart || !window.Highcharts) return;
-
-  window.dashboardSyncing = true;
-  try {
-    Highcharts.charts.forEach(function (chart) {
-      if (!chart || chart === sourceAxis.chart || !chart.xAxis || !chart.xAxis[0]) return;
-      chart.xAxis[0].setExtremes(
-        event.min,
-        event.max,
-        true,
-        false,
-        { trigger: "syncDashboard" }
-      );
-    });
-  } finally {
-    window.dashboardSyncing = false;
-  }
-};
 ```
 
 ```{r}
