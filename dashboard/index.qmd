@@ -172,7 +172,7 @@ make_chart <- function(
     highcharter::hc_legend(enabled = FALSE) |>
     highcharter::hc_exporting(enabled = FALSE) |>
     highcharter::hc_credits(enabled = FALSE) |>
-    highcharter::hc_colors("#cf573b") |>
+    highcharter::hc_colors("#003b5c") |>
     highcharter::hc_responsive(
       rules = list(
         list(
