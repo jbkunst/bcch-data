@@ -23,6 +23,7 @@ execute:
 #| label: setup
 library(highcharter)
 
+# Localiza textos y números una sola vez para mantener consistencia entre gráficos.
 chart_lang <- getOption("highcharter.lang")
 chart_lang$decimalPoint <- ","
 chart_lang$thousandsSep <- "."
@@ -45,6 +46,9 @@ find_project_root <- function(path = getwd()) {
 
 project_root <- find_project_root()
 series_dir <- file.path(project_root, "api", "v1", "series")
+
+# El dashboard consume exclusivamente la API estática generada por el repositorio.
+# El manifest aporta el tamaño del catálogo sin cargar sus 25 mil registros.
 indicators_payload <- jsonlite::read_json(
   file.path(project_root, "api", "v1", "indicators.json"),
   simplifyVector = TRUE
@@ -76,6 +80,7 @@ format_percent <- function(x) scales::percent(x / 100, accuracy = 0.1, decimal.m
 format_number <- function(x) scales::number(x, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
 format_currency <- function(x) scales::dollar(x, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
 
+# Construye todas las tarjetas con la misma jerarquía visual e interacción.
 make_chart <- function(
   id,
   indicator_name,
@@ -88,6 +93,8 @@ make_chart <- function(
   data <- read_series(id)
   data <- data[is.finite(data$value), , drop = FALSE]
   last_date <- max(data$date)
+
+  # Cinco años cubren el selector más amplio sin incorporar historia no visible.
   first_date <- seq(last_date, by = "-5 years", length.out = 2L)[[2L]]
   visible <- data[data$date >= first_date, , drop = FALSE]
   latest <- tail(visible$value, 1L)
@@ -96,6 +103,8 @@ make_chart <- function(
   } else {
     list()
   }
+
+  # El nombre identifica la métrica antes de presentar el valor destacado.
   title_html <- paste0(
     '<span class="chart-indicator-heading">',
     '<span class="chart-indicator-name">',
@@ -212,6 +221,7 @@ make_chart <- function(
 ```{r}
 #| label: dashboard-hero
 #| results: asis
+# La fecha visible corresponde a la actualización efectiva de los indicadores.
 updated_at <- as.POSIXct(
   indicators_payload$updated_at,
   format = "%Y-%m-%dT%H:%M:%SZ",
@@ -230,6 +240,7 @@ indicator_items <- vapply(seq_len(nrow(indicators)), function(index) {
   )
 }, character(1))
 
+# El hero comunica el producto; la cinta se mueve al navbar al cargar la página.
 cat(
   '<header class="studio-hero">',
   '<div class="studio-hero-inner">',
@@ -266,6 +277,7 @@ cat(
 ```{=html}
 <script>
 (function () {
+  // Evita actualizar ocho gráficos ante cada movimiento mínimo del cursor.
   const syncDelay = 300;
   const boundCharts = new WeakSet();
   let syncTimer = null;
@@ -275,6 +287,7 @@ cat(
 
   function dashboardCharts() {
     if (!window.Highcharts) return [];
+    // Highstock crea series internas para el navegador; aquí sólo interesan las principales.
     return Highcharts.charts.filter(function (chart) {
       return chart && chart.container && chart.xAxis && chart.xAxis.length;
     });
@@ -287,6 +300,7 @@ cat(
   }
 
   function latestPointAtOrBefore(series, timestamp) {
+    // Las frecuencias difieren: cada serie usa su última observación no futura.
     const points = series.points || [];
     let low = 0;
     let high = points.length - 1;
@@ -393,6 +407,8 @@ cat(
       '</div>',
       '<div class="comparison-tooltip__rows">', otherRows, '</div>'
     ].join("");
+
+    // Fuera del contenedor, la tarjeta puede aprovechar el espacio entre gráficos.
     document.body.appendChild(tooltip);
     activeTooltip = tooltip;
 
@@ -465,6 +481,7 @@ cat(
     });
 
     chart.container.addEventListener("pointerup", function (event) {
+      // En pantallas táctiles, un toque fija la comparación y el siguiente la libera.
       if (event.pointerType !== "touch") return;
       if (touchPinned) {
         touchPinned = false;
