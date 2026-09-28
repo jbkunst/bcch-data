@@ -136,11 +136,22 @@ make_chart <- function(
         animation = FALSE,
         connectNulls = TRUE,
         lineWidth = 2.5,
-        marker = list(enabled = FALSE),
+        marker = list(
+          enabled = FALSE,
+          states = list(
+            hover = list(
+              enabled = TRUE,
+              radius = 5,
+              lineColor = "#ffffff",
+              lineWidth = 2
+            )
+          )
+        ),
         states = list(hover = list(lineWidthPlus = 0))
       )
     ) |>
     highcharter::hc_tooltip(
+      enabled = FALSE,
       shared = TRUE,
       valueDecimals = value_decimals,
       valueSuffix = value_suffix,
@@ -202,7 +213,7 @@ cat(
   '<div class="studio-hero-inner">',
   '<p class="studio-eyebrow">Chile · panorama económico</p>',
   '<h1>Indicadores económicos</h1>',
-  '<p>Una vista compacta de actividad, precios, mercado laboral, tasas y unidades de cuenta.</p>',
+  '<p>Una vista compacta de actividad, precios, mercado laboral y tasas.</p>',
   '<small>Actualizado ', updated_label, '</small>',
   '</div>',
   '</header>',
@@ -224,6 +235,246 @@ cat(
   '});',
   '</script>'
 )
+```
+
+```{=html}
+<script>
+(function () {
+  const syncDelay = 300;
+  const boundCharts = new WeakSet();
+  let syncTimer = null;
+  let touchPinned = false;
+  let activeTooltip = null;
+  let highlightedPoints = [];
+
+  function dashboardCharts() {
+    if (!window.Highcharts) return [];
+    return Highcharts.charts.filter(function (chart) {
+      return chart && chart.container && chart.xAxis && chart.xAxis.length;
+    });
+  }
+
+  function primarySeries(chart) {
+    return chart.series.find(function (series) {
+      return series.visible && !series.options.isInternal;
+    });
+  }
+
+  function latestPointAtOrBefore(series, timestamp) {
+    const points = series.points || [];
+    let low = 0;
+    let high = points.length - 1;
+    let match = null;
+
+    while (low <= high) {
+      const middle = Math.floor((low + high) / 2);
+      const point = points[middle];
+      if (point.x <= timestamp) {
+        match = point;
+        low = middle + 1;
+      } else {
+        high = middle - 1;
+      }
+    }
+
+    return match;
+  }
+
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, function (character) {
+      return {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        "\"": "&quot;",
+        "'": "&#039;"
+      }[character];
+    });
+  }
+
+  function formatValue(chart, point) {
+    const options = chart.options.tooltip || {};
+    const decimals = Number.isInteger(options.valueDecimals)
+      ? options.valueDecimals
+      : 2;
+    const value = new Intl.NumberFormat("es-CL", {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals
+    }).format(point.y);
+    return value + (options.valueSuffix || "");
+  }
+
+  function formatDate(timestamp) {
+    return new Intl.DateTimeFormat("es-CL", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      timeZone: "UTC"
+    }).format(new Date(timestamp));
+  }
+
+  function comparisonRows(timestamp) {
+    return dashboardCharts().map(function (chart) {
+      const series = primarySeries(chart);
+      const point = series && latestPointAtOrBefore(series, timestamp);
+      return point ? { chart: chart, series: series, point: point } : null;
+    }).filter(Boolean);
+  }
+
+  function clearComparison() {
+    window.clearTimeout(syncTimer);
+    highlightedPoints.forEach(function (point) {
+      point.setState("");
+    });
+    highlightedPoints = [];
+    if (activeTooltip) activeTooltip.remove();
+    activeTooltip = null;
+  }
+
+  function renderComparison(activeChart, activePoint) {
+    const rows = comparisonRows(activePoint.x);
+    const active = rows.find(function (row) {
+      return row.chart === activeChart;
+    });
+    if (!active) return;
+
+    clearComparison();
+    highlightedPoints = rows.map(function (row) {
+      row.point.setState("hover");
+      return row.point;
+    });
+
+    const otherRows = rows.filter(function (row) {
+      return row !== active;
+    }).map(function (row) {
+      return [
+        '<div class="comparison-tooltip__row">',
+        '<span class="comparison-tooltip__name">', escapeHtml(row.series.name), '</span>',
+        '<strong>', escapeHtml(formatValue(row.chart, row.point)), '</strong>',
+        '<time>', escapeHtml(formatDate(row.point.x)), '</time>',
+        '</div>'
+      ].join("");
+    }).join("");
+
+    const tooltip = document.createElement("div");
+    tooltip.className = "comparison-tooltip";
+    tooltip.setAttribute("role", "status");
+    tooltip.innerHTML = [
+      '<div class="comparison-tooltip__lead">',
+      '<span>', escapeHtml(active.series.name), '</span>',
+      '<strong>', escapeHtml(formatValue(active.chart, active.point)), '</strong>',
+      '<time>', escapeHtml(formatDate(active.point.x)), '</time>',
+      '</div>',
+      '<div class="comparison-tooltip__rows">', otherRows, '</div>'
+    ].join("");
+    document.body.appendChild(tooltip);
+    activeTooltip = tooltip;
+
+    const gap = 14;
+    const viewportGap = 8;
+    const chartBounds = activeChart.container.getBoundingClientRect();
+    const pointX = activeChart.plotLeft + activePoint.plotX;
+    const pointY = activeChart.plotTop + activePoint.plotY;
+    const tooltipWidth = tooltip.offsetWidth;
+    const tooltipHeight = tooltip.offsetHeight;
+    const roomOnRight = window.innerWidth - chartBounds.right;
+    const roomOnLeft = chartBounds.left;
+    const pointViewportX = chartBounds.left + pointX;
+    const pointViewportY = chartBounds.top + pointY;
+    let preferredLeft;
+
+    if (roomOnRight >= tooltipWidth + gap + viewportGap) {
+      preferredLeft = chartBounds.right + gap;
+    } else if (roomOnLeft >= tooltipWidth + gap + viewportGap) {
+      preferredLeft = chartBounds.left - tooltipWidth - gap;
+    } else {
+      preferredLeft = pointViewportX > window.innerWidth / 2
+        ? pointViewportX - tooltipWidth - gap
+        : pointViewportX + gap;
+    }
+
+    tooltip.style.left = Math.max(
+      viewportGap,
+      Math.min(preferredLeft, window.innerWidth - tooltipWidth - viewportGap)
+    ) + "px";
+    tooltip.style.top = Math.max(
+      viewportGap,
+      Math.min(
+        pointViewportY - tooltipHeight / 2,
+        window.innerHeight - tooltipHeight - viewportGap
+      )
+    ) + "px";
+  }
+
+  function pointFromEvent(chart, event) {
+    const normalized = chart.pointer.normalize(event);
+    const insidePlot = chart.isInsidePlot(
+      normalized.chartX - chart.plotLeft,
+      normalized.chartY - chart.plotTop
+    );
+    const series = primarySeries(chart);
+    return insidePlot && series ? series.searchPoint(normalized, true) : null;
+  }
+
+  function scheduleSynchronization(chart, point) {
+    window.clearTimeout(syncTimer);
+    syncTimer = window.setTimeout(function () {
+      renderComparison(chart, point);
+    }, syncDelay);
+  }
+
+  function bindChart(chart) {
+    if (boundCharts.has(chart)) return;
+    boundCharts.add(chart);
+
+    chart.container.addEventListener("pointermove", function (event) {
+      if (touchPinned || event.pointerType === "touch") return;
+      const point = pointFromEvent(chart, event);
+      if (point) scheduleSynchronization(chart, point);
+    });
+
+    chart.container.addEventListener("pointerleave", function () {
+      if (touchPinned) return;
+      clearComparison();
+    });
+
+    chart.container.addEventListener("pointerup", function (event) {
+      if (event.pointerType !== "touch") return;
+      if (touchPinned) {
+        touchPinned = false;
+        clearComparison();
+        return;
+      }
+      const point = pointFromEvent(chart, event);
+      if (!point) return;
+      touchPinned = true;
+      renderComparison(chart, point);
+    });
+  }
+
+  function installSynchronizedTooltips(attempt) {
+    const charts = dashboardCharts();
+    charts.forEach(bindChart);
+    if (attempt < 20) {
+      window.setTimeout(function () {
+        installSynchronizedTooltips(attempt + 1);
+      }, 100);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    installSynchronizedTooltips(0);
+  });
+  window.addEventListener("resize", function () {
+    touchPinned = false;
+    clearComparison();
+  });
+  window.addEventListener("scroll", function () {
+    touchPinned = false;
+    clearComparison();
+  }, true);
+})();
+</script>
 ```
 
 ## Row {height=50%}

@@ -34,11 +34,8 @@ body,
   flex-wrap: nowrap;
 }
 
-.navbar-brand {
-  color: #fff !important;
-  font-family: var(--studio-heading-font) !important;
-  font-weight: 500;
-  letter-spacing: 0.01em;
+.navbar-brand-container {
+  display: none;
 }
 
 .navbar .navbar-title,
@@ -60,7 +57,7 @@ body,
   flex: 1 1 0;
   min-width: 0;
   overflow: hidden;
-  margin-inline: 1.5rem;
+  margin-inline: 0 1rem;
   color: #aebfc9;
   font-family: var(--studio-technical-font);
   font-size: 0.75rem;
@@ -223,6 +220,80 @@ body,
 .highcharts-tooltip,
 .highcharts-range-selector-buttons {
   font-family: var(--studio-technical-font) !important;
+}
+
+.comparison-tooltip {
+  position: fixed;
+  z-index: 1090;
+  width: min(19rem, calc(100% - 1rem));
+  box-sizing: border-box;
+  padding: 0.65rem 0.7rem;
+  pointer-events: none;
+  border: 1px solid var(--studio-border);
+  border-left: 3px solid var(--studio-gold);
+  border-radius: 6px;
+  color: var(--studio-ink);
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 6px 18px rgba(23, 36, 45, 0.14);
+  font-family: var(--studio-technical-font);
+  font-size: 0.7rem;
+}
+
+.comparison-tooltip__lead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 0.1rem 0.6rem;
+}
+
+.comparison-tooltip__lead > span {
+  grid-column: 1 / -1;
+  overflow: hidden;
+  color: var(--studio-muted);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.comparison-tooltip__lead > strong {
+  color: var(--studio-blue);
+  font-family: var(--studio-heading-font);
+  font-size: 1.3rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.comparison-tooltip time {
+  color: #7c8b94;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.comparison-tooltip__rows {
+  margin-top: 0.45rem;
+  padding-top: 0.35rem;
+  border-top: 1px solid #e7ebee;
+}
+
+.comparison-tooltip__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding-block: 0.12rem;
+}
+
+.comparison-tooltip__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.comparison-tooltip__row strong {
+  color: var(--studio-blue);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 @media (max-width: 700px) {
