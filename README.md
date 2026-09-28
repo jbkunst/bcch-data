@@ -5,6 +5,15 @@ de Chile y mantiene una selección de historias como JSON estáticos actualizado
 automáticamente. Los datos alimentan el dashboard **Indicadores económicos** y
 pueden ser consumidos directamente por otras aplicaciones.
 
+## ¿Por qué existe?
+
+La [Base de Datos Estadísticos (BDE)](https://si3.bcentral.cl/siete) del Banco Central de Chile sigue siendo la fuente oficial y completa. `bcch-data` no busca reemplazarla, sino complementarla con una capa pequeña para dos casos de uso frecuentes:
+
+- consultar rápidamente una selección de indicadores económicos sin recorrer toda la BDE;
+- reutilizar series desde otras aplicaciones sin repetir la misma descarga desde la API del Banco Central.
+
+Un proceso automático descarga y valida los datos, los publica como JSON estáticos y los deja disponibles para el dashboard y otros consumidores. Esto separa la obtención de los datos de su consumo: aplicaciones como `bcch-studio` pueden usar directamente las historias publicadas y recurrir a la API del Banco Central sólo cuando una serie todavía no está disponible en `bcch-data`.
+
 El flujo es deliberadamente pequeño:
 
 ```text
