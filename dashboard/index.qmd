@@ -11,6 +11,8 @@ format:
         href: api/v1/indicators.json
       - icon: database
         href: api/v1/manifest.json
+      - icon: github
+        href: https://github.com/jbkunst/bcch-data
 execute:
   echo: false
   warning: false
@@ -47,7 +49,17 @@ indicators_payload <- jsonlite::read_json(
   file.path(project_root, "api", "v1", "indicators.json"),
   simplifyVector = TRUE
 )
+manifest_payload <- jsonlite::read_json(
+  file.path(project_root, "api", "v1", "manifest.json"),
+  simplifyVector = TRUE
+)
 indicators <- indicators_payload$indicators
+catalog_series_count <- as.integer(manifest_payload$catalog_series_count)
+catalog_size_label <- if (catalog_series_count >= 1000L) {
+  paste0("más de ", floor(catalog_series_count / 1000), " mil series")
+} else {
+  paste(catalog_series_count, "series")
+}
 
 read_series <- function(id) {
   payload <- jsonlite::read_json(
@@ -66,7 +78,8 @@ format_currency <- function(x) scales::dollar(x, accuracy = 0.01, big.mark = "."
 
 make_chart <- function(
   id,
-  label,
+  indicator_name,
+  description,
   formatter = format_number,
   value_suffix = "",
   value_decimals = 2,
@@ -83,12 +96,22 @@ make_chart <- function(
   } else {
     list()
   }
+  title_html <- paste0(
+    '<span class="chart-indicator-heading">',
+    '<span class="chart-indicator-name">',
+    htmltools::htmlEscape(indicator_name),
+    '</span>',
+    '<span class="chart-indicator-value">',
+    htmltools::htmlEscape(formatter(latest)),
+    '</span>',
+    '</span>'
+  )
 
   highcharter::hchart(
     visible,
     "line",
     highcharter::hcaes(x = date, y = value),
-    name = label
+    name = indicator_name
   ) |>
     highcharter::hc_chart(
       backgroundColor = "transparent",
@@ -96,22 +119,21 @@ make_chart <- function(
       spacing = c(8, 8, 4, 8)
     ) |>
     highcharter::hc_title(
-      text = formatter(latest),
+      text = title_html,
+      useHTML = TRUE,
       align = "center",
       verticalAlign = "top",
-      y = 30,
-      style = list(
-        color = "#17242d",
-        fontFamily = "IBM Plex Serif, Georgia, serif",
-        fontSize = "34px",
-        fontWeight = "500"
-      )
+      y = 14
     ) |>
     highcharter::hc_subtitle(
-      text = paste0(label, " · último dato: ", format(last_date, "%d-%m-%Y")),
+      text = paste0(
+        description,
+        ". Último dato: ",
+        format(last_date, "%d-%m-%Y")
+      ),
       align = "center",
-      y = 62,
-      style = list(color = "#53636d", fontSize = "12px")
+      y = 92,
+      style = list(color = "#53636d", fontSize = "11px")
     ) |>
     highcharter::hc_xAxis(
       type = "datetime",
@@ -214,7 +236,8 @@ cat(
   '<p class="studio-eyebrow">Chile · panorama económico</p>',
   '<h1>Indicadores económicos</h1>',
   '<p>Una vista compacta de actividad, precios, mercado laboral y tasas.</p>',
-  '<small>Actualizado ', updated_label, '</small>',
+  '<small>Datos públicos del Banco Central de Chile · API estática con actualización diaria · ',
+  'catálogo de ', catalog_size_label, ' · actualizado ', updated_label, '</small>',
   '</div>',
   '</header>',
   '<div id="navbar-ticker-source" class="navbar-ticker" tabindex="0" role="region" ',
@@ -227,7 +250,10 @@ cat(
   'document.addEventListener("DOMContentLoaded", function () {',
   '  var ticker = document.getElementById("navbar-ticker-source");',
   '  var links = document.querySelector(".quarto-dashboard-links");',
-  '  if (ticker && links) links.before(ticker);',
+  '  if (ticker && links) {',
+  '    ticker.classList.remove("bslib-grid-item", "html-fill-item");',
+  '    links.before(ticker);',
+  '  }',
   '});',
   'document.addEventListener("click", function (event) {',
   '  var ticker = event.target.closest(".navbar-ticker");',
@@ -485,7 +511,8 @@ cat(
 #| label: chart-pib
 make_chart(
   "F032.PIB.V12.R.Z.2018.Z.Z.0.T",
-  "PIB · variación interanual",
+  "PIB",
+  "Variación interanual del PIB",
   formatter = format_percent,
   value_suffix = "%",
   zero_line = TRUE
@@ -498,7 +525,8 @@ make_chart(
 #| label: chart-ipc
 make_chart(
   "F074.IPC.V12.Z.EP23.C.M",
-  "IPC · variación interanual",
+  "IPC",
+  "Variación interanual del IPC",
   formatter = format_percent,
   value_suffix = "%",
   zero_line = TRUE
@@ -511,6 +539,7 @@ make_chart(
 #| label: chart-unemployment
 make_chart(
   "F049.DES.TAS.INE9.10.M",
+  "Desempleo",
   "Tasa de desempleo",
   formatter = format_percent,
   value_suffix = "%"
@@ -523,7 +552,8 @@ make_chart(
 #| label: chart-imacec
 make_chart(
   "F032.IMC.V12.Z.Z.2018.Z.Z.0.M",
-  "IMACEC · variación interanual",
+  "IMACEC",
+  "Variación interanual del IMACEC",
   formatter = format_percent,
   value_suffix = "%",
   zero_line = TRUE
@@ -538,6 +568,7 @@ make_chart(
 #| label: chart-tpm
 make_chart(
   "F022.TPM.TIN.D001.NO.Z.D",
+  "TPM",
   "Tasa de política monetaria",
   formatter = format_percent,
   value_suffix = "%"
@@ -550,7 +581,8 @@ make_chart(
 #| label: chart-usd
 make_chart(
   "F073.TCO.PRE.Z.D",
-  "Dólar observado · CLP/USD",
+  "Dólar observado",
+  "Precio del dólar observado · CLP/USD",
   formatter = function(x) paste0(format_number(x), " $/USD"),
   value_suffix = " $/USD"
 )
@@ -562,7 +594,8 @@ make_chart(
 #| label: chart-uf
 make_chart(
   "F073.UFF.PRE.Z.D",
-  "Unidad de Fomento",
+  "UF",
+  "Valor de la Unidad de Fomento",
   formatter = format_currency,
   value_suffix = " CLP"
 )
@@ -574,7 +607,8 @@ make_chart(
 #| label: chart-utm
 make_chart(
   "F073.UTR.PRE.Z.M",
-  "Unidad Tributaria Mensual",
+  "UTM",
+  "Valor de la Unidad Tributaria Mensual",
   formatter = function(x) scales::dollar(x, accuracy = 1, big.mark = ".", decimal.mark = ","),
   value_suffix = " CLP",
   value_decimals = 0
