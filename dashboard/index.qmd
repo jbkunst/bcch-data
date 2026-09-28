@@ -119,11 +119,14 @@ make_chart <- function(
       title = list(text = NULL),
       lineWidth = 0,
       tickWidth = 0,
+      gridLineWidth = 1,
+      gridLineColor = "#e7ebee",
       labels = list(style = list(color = "#53636d", fontSize = "11px"))
     ) |>
     highcharter::hc_yAxis(
       title = list(text = ""),
       opposite = TRUE,
+      gridLineWidth = 1,
       gridLineColor = "#e7ebee",
       plotLines = plot_lines,
       labels = list(style = list(color = "#53636d", fontSize = "11px"))
@@ -169,23 +172,7 @@ make_chart <- function(
     highcharter::hc_legend(enabled = FALSE) |>
     highcharter::hc_exporting(enabled = FALSE) |>
     highcharter::hc_credits(enabled = FALSE) |>
-    highcharter::hc_colors("#003b5c") |>
-    highcharter::hc_responsive(
-      rules = list(
-        list(
-          condition = list(maxWidth = 360),
-          chartOptions = list(
-            chart = list(spacing = c(4, 4, 2, 4)),
-            xAxis = list(labels = list(enabled = FALSE), tickLength = 0),
-            yAxis = list(
-              labels = list(enabled = FALSE),
-              gridLineWidth = 0,
-              title = list(text = NULL)
-            )
-          )
-        )
-      )
-    )
+    highcharter::hc_colors("#003b5c")
 }
 ```
 
@@ -212,10 +199,12 @@ indicator_items <- vapply(seq_len(nrow(indicators)), function(index) {
 
 cat(
   '<header class="studio-hero">',
+  '<div class="studio-hero-inner">',
   '<p class="studio-eyebrow">Chile · panorama económico</p>',
   '<h1>Indicadores económicos</h1>',
   '<p>Una vista compacta de actividad, precios, mercado laboral, tasas y unidades de cuenta.</p>',
   '<small>Actualizado ', updated_label, '</small>',
+  '</div>',
   '</header>',
   '<div id="navbar-ticker-source" class="navbar-ticker" tabindex="0" role="region" ',
   'aria-label="Últimos indicadores. Toca o enfoca para pausar la cinta.">',

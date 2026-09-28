@@ -25,7 +25,7 @@ body,
   min-height: 2.8rem;
   border: 0;
   background: var(--studio-blue) !important;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: none;
   font-family: var(--studio-technical-font);
 }
 
@@ -133,15 +133,27 @@ body,
 }
 
 .quarto-dashboard-content:not(.dashboard-scrolling) {
-  padding: 0.45rem 0.7rem 0.7rem !important;
+  padding: 0 0.7rem 0.7rem !important;
   gap: 0.55rem !important;
 }
 
 .studio-hero {
+  flex: 0 0 auto !important;
   min-width: 0;
-  max-width: 100%;
+  width: auto;
+  height: auto !important;
+  min-height: 0 !important;
+  margin-inline: -0.7rem;
   box-sizing: border-box;
-  padding: 0.35rem 0.2rem 0.45rem;
+  background: var(--studio-blue);
+  color: #fff;
+}
+
+.studio-hero-inner {
+  width: 100%;
+  margin: 0;
+  padding: 1rem 0.7rem 1.15rem;
+  box-sizing: border-box;
 }
 
 .studio-eyebrow {
@@ -156,23 +168,23 @@ body,
 
 .studio-hero h1 {
   margin: 0;
-  color: var(--studio-ink);
+  color: #fff;
   font-family: var(--studio-heading-font);
   font-size: clamp(1.5rem, 2.1vw, 2.1rem);
   font-weight: 500;
   letter-spacing: -0.025em;
 }
 
-.studio-hero > p:not(.studio-eyebrow) {
+.studio-hero-inner > p:not(.studio-eyebrow) {
   max-width: 48rem;
   margin: 0.15rem 0 0.1rem;
-  color: var(--studio-muted);
+  color: #d6e2e9;
   font-size: 0.94rem;
   line-height: 1.25;
 }
 
 .studio-hero small {
-  color: #7c8b94;
+  color: #aebfc9;
   font-family: var(--studio-technical-font);
   font-size: 0.7rem;
 }
@@ -213,29 +225,6 @@ body,
   font-family: var(--studio-technical-font) !important;
 }
 
-@media (max-width: 900px) {
-  body,
-  .dashboard-page {
-    overflow-y: auto;
-  }
-
-  .quarto-dashboard-content:not(.dashboard-scrolling) {
-    height: auto !important;
-    overflow: visible !important;
-  }
-
-  .bslib-grid[data-layout="flow"] {
-    display: block !important;
-    height: auto !important;
-  }
-
-  .bslib-grid[data-layout="flow"] > .bslib-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    grid-template-rows: repeat(2, 310px) !important;
-    margin-bottom: 0.75rem;
-  }
-}
-
 @media (max-width: 700px) {
   .navbar-container {
     position: relative;
@@ -258,8 +247,8 @@ body,
     mask-image: linear-gradient(to right, transparent, black 0.75rem, black calc(100% - 0.75rem), transparent);
   }
 
-  .studio-hero {
-    padding: 0.35rem 0.25rem 0.55rem;
+  .studio-hero-inner {
+    padding-block: 0.9rem 1rem;
   }
 
   .studio-hero h1 {
@@ -267,9 +256,4 @@ body,
     line-height: 1.08;
   }
 
-  .bslib-grid[data-layout="flow"] > .bslib-grid {
-    grid-template-columns: minmax(0, 1fr) !important;
-    grid-template-rows: repeat(2, 390px) !important;
-    margin-bottom: 1rem;
-  }
 }
