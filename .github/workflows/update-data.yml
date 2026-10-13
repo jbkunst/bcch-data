@@ -3,8 +3,11 @@ name: update-data
 on:
   workflow_dispatch:
   schedule:
-    # 20:30 Chile (UTC-3) / 19:30 Chile (UTC-4), after the daily FX publication.
-    - cron: "30 23 * * *"
+    # Primary attempt after the daily FX publication, plus a fallback in case
+    # GitHub delays or drops the first scheduled event. The freshness check
+    # below prevents both attempts from creating separate daily updates.
+    - cron: "17 23 * * *"
+    - cron: "43 04 * * *"
   push:
     branches: [main]
   pull_request:
@@ -42,8 +45,33 @@ jobs:
             any::scales
             github::jbkunst/bcchr
 
+      - name: Check whether scheduled data are stale
+        id: freshness
+        if: github.event_name == 'schedule'
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from datetime import datetime, timedelta, timezone
+
+          stale = True
+          try:
+              with open("api/v1/manifest.json", encoding="utf-8") as manifest_file:
+                  updated_at = json.load(manifest_file)["updated_at"]
+              updated = datetime.fromisoformat(updated_at.replace("Z", "+00:00"))
+              age = datetime.now(timezone.utc) - updated
+              stale = age >= timedelta(hours=20)
+              print(f"Published data age: {age}")
+          except (OSError, KeyError, TypeError, ValueError) as error:
+              print(f"Could not determine data freshness; update will run: {error}")
+
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"stale={str(stale).lower()}\n")
+          PY
+
       - name: Update data from BCCh
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && steps.freshness.outputs.stale == 'true')
         env:
           BCCH_TOKEN: ${{ secrets.BCCH_TOKEN }}
         run: Rscript scripts/update_data.R
@@ -61,7 +89,7 @@ jobs:
           cp -R api/v1 _site/api/v1
 
       - name: Commit updated JSON
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && steps.freshness.outputs.stale == 'true')
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"

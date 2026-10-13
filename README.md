@@ -103,9 +103,11 @@ https://jbkunst.github.io/bcch-data/api/v1/indicators.json
 https://jbkunst.github.io/bcch-data/api/v1/series/F073.TCO.PRE.Z.D.json
 ```
 
-La actualización automática corre diariamente a las 23:30 UTC y también puede
-ejecutarse manualmente. El HTML del dashboard se publica como artefacto de GitHub
-Pages y no se versiona en `main`.
+La actualización automática tiene dos oportunidades diarias programadas y también
+puede ejecutarse manualmente. La segunda oportunidad actúa como respaldo si
+GitHub Actions retrasa u omite la primera; una verificación de frescura evita más
+de una descarga y un commit dentro de una ventana de 20 horas. El HTML del
+dashboard se publica como artefacto de GitHub Pages y no se versiona en `main`.
 
 Se conserva la historia completa que devuelve `bcchr` para cada serie; la ventana
 de cinco años es sólo una decisión de visualización del dashboard.
