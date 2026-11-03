@@ -226,3 +226,18 @@ series:
   # Mercado bursátil
   - id: F013.IBC.IND.N.7.LAC.CL.CLP.BLO.M
     name: "IPSA"
+
+derived_series:
+  - id: BCCHDATA.CCNN.EXPORTACIONES_NETAS.V12.2018.T
+    name: "Exportaciones netas"
+    english_name: "Net exports contribution"
+    frequency: QUARTERLY
+    unit: "Puntos porcentuales"
+    measure: "Contribución a la variación anual del PIB"
+    adjustment: "Serie original"
+    operation: subtract
+    source_ids:
+      - F033.XBS.V12.R.Z.2018.0.T
+      - F033.IBS.V12.R.Z.2018.0.T
+    formula: "F033.XBS.V12.R.Z.2018.0.T - F033.IBS.V12.R.Z.2018.0.T"
+    reference_url: "https://si3.bcentral.cl/setgraficos/data/chart.aspx?codchart=GRAF_CCNN_CONTRIPIB_2018&periodo=largo"

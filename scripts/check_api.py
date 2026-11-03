@@ -94,12 +94,15 @@ def validate_catalog(source: ApiSource, manifest: dict[str, Any]) -> dict[str, d
         "display_name", "measure", "unit", "adjustment", "source",
         "enrichment_version",
     }
+    provenance_fields = {"kind", "official"}
     catalog: dict[str, dict[str, Any]] = {}
     enrichment_versions: set[int] = set()
     for index, record in enumerate(records):
         label = f"catalog series[{index}]"
         require(isinstance(record, dict), f"{label}: expected an object")
-        require(set(record) == required_fields, f"{label}: unexpected fields")
+        fields = set(record)
+        require(required_fields <= fields, f"{label}: missing fields")
+        require(fields <= required_fields | provenance_fields, f"{label}: unexpected fields")
         series_id = record.get("series_id")
         require(isinstance(series_id, str) and series_id, f"{label}: invalid series_id")
         require(series_id not in catalog, f"catalog: duplicate series_id {series_id}")
@@ -129,6 +132,15 @@ def validate_catalog(source: ApiSource, manifest: dict[str, Any]) -> dict[str, d
 
         version = record.get("enrichment_version")
         require(isinstance(version, int) and version > 0, f"{series_id}: invalid enrichment_version")
+        kind = record.get("kind", "official")
+        official = record.get("official", True)
+        require(kind in {"official", "derived"}, f"{series_id}: invalid kind")
+        require(isinstance(official, bool), f"{series_id}: invalid official flag")
+        require(official == (kind == "official"), f"{series_id}: inconsistent provenance")
+        if series_id.startswith("BCCHDATA."):
+            require(kind == "derived", f"{series_id}: internal ID must be derived")
+        else:
+            require(kind == "official", f"{series_id}: official ID cannot be derived")
         enrichment_versions.add(version)
         catalog[series_id] = record
 
@@ -136,7 +148,12 @@ def validate_catalog(source: ApiSource, manifest: dict[str, Any]) -> dict[str, d
     return catalog
 
 
-def validate_series(series_id: str, entry: dict[str, Any], payload: Any) -> None:
+def validate_series(
+    series_id: str,
+    entry: dict[str, Any],
+    catalog_record: dict[str, Any],
+    payload: Any,
+) -> None:
     require(isinstance(payload, dict), f"{series_id}: payload must be an object")
     require(payload.get("series_id") == series_id, f"{series_id}: wrong series_id")
     require(payload.get("name") == entry.get("name"), f"{series_id}: name mismatch")
@@ -144,7 +161,40 @@ def validate_series(series_id: str, entry: dict[str, Any], payload: Any) -> None
         payload.get("frequency") == entry.get("frequency"),
         f"{series_id}: frequency mismatch",
     )
-    require(payload.get("source") == "Banco Central de Chile", f"{series_id}: bad source")
+    kind = payload.get("kind", "official")
+    official = payload.get("official", True)
+    require(kind == entry.get("kind", "official"), f"{series_id}: manifest kind mismatch")
+    require(kind == catalog_record.get("kind", "official"), f"{series_id}: catalog kind mismatch")
+    require(official == entry.get("official", True), f"{series_id}: manifest official mismatch")
+    require(official == catalog_record.get("official", True), f"{series_id}: catalog official mismatch")
+
+    if kind == "official":
+        require(payload.get("source") == "Banco Central de Chile", f"{series_id}: bad source")
+    else:
+        require(series_id.startswith("BCCHDATA."), f"{series_id}: invalid derived ID")
+        require(official is False, f"{series_id}: derived series marked official")
+        require(
+            payload.get("source") == "Cálculo bcch-data a partir de series del Banco Central de Chile",
+            f"{series_id}: bad derived source",
+        )
+        source_series = payload.get("source_series")
+        require(
+            isinstance(source_series, list)
+            and len(source_series) == 2
+            and len(set(source_series)) == 2,
+            f"{series_id}: invalid source_series",
+        )
+        require(payload.get("operation") == "subtract", f"{series_id}: unsupported operation")
+        for field in ("formula", "reference_url"):
+            require(
+                isinstance(payload.get(field), str) and bool(payload[field]),
+                f"{series_id}: invalid {field}",
+            )
+        for field in ("source_series", "operation", "formula", "reference_url"):
+            require(
+                entry.get(field) == payload.get(field),
+                f"{series_id}: manifest {field} mismatch",
+            )
 
     observations = payload.get("observations")
     require(isinstance(observations, list) and observations, f"{series_id}: no observations")
@@ -166,6 +216,39 @@ def validate_series(series_id: str, entry: dict[str, Any], payload: Any) -> None
     require(entry.get("observation_count") == len(dates), f"{series_id}: count mismatch")
     require(entry.get("last_observation") == dates[-1], f"{series_id}: manifest last date mismatch")
     require(payload.get("last_observation") == dates[-1], f"{series_id}: payload last date mismatch")
+
+
+def validate_derivations(payloads: dict[str, dict[str, Any]]) -> None:
+    for series_id, payload in payloads.items():
+        if payload.get("kind", "official") != "derived":
+            continue
+
+        source_ids = payload["source_series"]
+        require(all(source_id in payloads for source_id in source_ids), f"{series_id}: missing source")
+        sources = [payloads[source_id] for source_id in source_ids]
+        require(
+            all(source.get("kind", "official") == "official" for source in sources),
+            f"{series_id}: derived chains are not supported",
+        )
+        source_dates = [
+            [observation["date"] for observation in source["observations"]]
+            for source in sources
+        ]
+        derived_dates = [observation["date"] for observation in payload["observations"]]
+        require(
+            source_dates[0] == source_dates[1] == derived_dates,
+            f"{series_id}: source dates do not match",
+        )
+
+        for index, observation in enumerate(payload["observations"]):
+            expected = (
+                sources[0]["observations"][index]["value"]
+                - sources[1]["observations"][index]["value"]
+            )
+            require(
+                math.isclose(observation["value"], expected, rel_tol=0.0, abs_tol=1e-10),
+                f"{series_id}[{index}]: derived value mismatch",
+            )
 
 
 def validate(root: str) -> tuple[int, int, int, int]:
@@ -195,10 +278,12 @@ def validate(root: str) -> tuple[int, int, int, int]:
             f"{series_id}: catalog frequency mismatch",
         )
         payload = source.read_json(expected_path)
-        validate_series(series_id, entry, payload)
+        validate_series(series_id, entry, catalog[series_id], payload)
         payloads[series_id] = payload
         observation_count += entry["observation_count"]
         expected_paths.add(expected_path)
+
+    validate_derivations(payloads)
 
     if not source.remote:
         actual_paths = {

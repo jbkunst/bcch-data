@@ -14,16 +14,17 @@ La [Base de Datos Estadísticos (BDE)](https://si3.bcentral.cl/siete) del Banco 
 
 Un proceso automático descarga y valida los datos, los publica como JSON estáticos y los deja disponibles para el dashboard y otros consumidores. Esto separa la obtención de los datos de su consumo: aplicaciones como `bcch-studio` pueden usar directamente las historias publicadas y recurrir a la API del Banco Central sólo cuando una serie todavía no está disponible en `bcch-data`.
 
-El flujo es deliberadamente pequeño:
+El flujo es deliberadamente pequeño. Las historias derivadas se calculan sólo
+desde series oficiales ya descargadas y nunca disparan consultas adicionales:
 
 ```text
-BCCh → bcchr → JSON estáticos → dashboard y otros consumidores
+BCCh → bcchr → historias oficiales → derivadas declaradas → JSON estáticos
 ```
 
 ## Estructura
 
-- `config/series.yml`: catálogo declarativo `id` + `name`, inicialmente unificado
-  desde los tres catálogos de análisis de `bcch-studio`.
+- `config/series.yml`: selección declarativa de historias oficiales y de las
+  derivadas reproducibles que se calculan a partir de ellas.
 - `config/indicators.yml`: selección, unidades y formato de los indicadores
   destacados.
 - `scripts/update_data.R`: descarga la historia completa, normaliza y genera los
@@ -49,8 +50,9 @@ BCCh → bcchr → JSON estáticos → dashboard y otros consumidores
 
 Cada elemento de `series` incluye la metadata original y los campos editoriales
 `display_name`, `measure`, `unit`, `adjustment`, `source` y
-`enrichment_version`. La presencia de una serie en este catálogo no implica que
-su historia esté cacheada; para eso se debe consultar `manifest.json`.
+`enrichment_version`. `kind` y `official` distinguen las series oficiales de las
+derivadas de `bcch-data`. La presencia de una serie en este catálogo no implica
+que su historia esté cacheada; para eso se debe consultar `manifest.json`.
 
 El catálogo se ordena por `series_id` y se escribe de forma compacta. Su
 `updated_at` cambia solamente cuando cambian la metadata o el enriquecimiento;
@@ -60,9 +62,21 @@ si sus registros son idénticos, el archivo no se reescribe. En cambio,
 
 ## Uso
 
-Para agregar una serie, incorpora su código y nombre en `config/series.yml`. La
-actualización requiere `BCCH_TOKEN` como variable de entorno y usa `bcchr`; el
+Para agregar una serie oficial, incorpora su código y nombre bajo `series` en
+`config/series.yml`. Una entrada bajo `derived_series` debe usar un ID propio con
+prefijo `BCCHDATA.`, declarar dos fuentes oficiales configuradas y una operación
+soportada. La primera operación disponible es `subtract`; no admite cadenas de
+derivadas ni fechas distintas entre las fuentes.
+
+La actualización requiere `BCCH_TOKEN` como variable de entorno y usa `bcchr`; el
 token nunca se escribe en los datos.
+
+La contribución de exportaciones netas se publica como
+`BCCHDATA.CCNN.EXPORTACIONES_NETAS.V12.2018.T`. Se calcula mediante
+`F033.XBS.V12.R.Z.2018.0.T - F033.IBS.V12.R.Z.2018.0.T` y conserva en su payload
+los IDs de origen, la fórmula y el enlace del gráfico oficial usado para validar
+la definición. Es un cálculo reproducible de `bcch-data`, no una serie oficial del
+Banco Central.
 
 ```r
 system("Rscript scripts/update_data.R")
@@ -72,8 +86,10 @@ system("quarto render dashboard/index.qmd --output-dir ../_site")
 ## Revisar el API
 
 El validador usa solamente la biblioteca estándar de Python. Comprueba el
-catálogo completo, el manifest, las 94 series, el orden y unicidad de sus fechas,
-sus valores y la coherencia de los indicadores destacados:
+catálogo completo, el manifest, todas las historias publicadas, el orden y
+unicidad de sus fechas, sus valores y la coherencia de los indicadores
+destacados. Para las derivadas también verifica su procedencia y recalcula cada
+observación desde las fuentes oficiales:
 
 ```shell
 python scripts/check_api.py
@@ -101,6 +117,7 @@ https://jbkunst.github.io/bcch-data/api/v1/manifest.json
 https://jbkunst.github.io/bcch-data/api/v1/catalog.json
 https://jbkunst.github.io/bcch-data/api/v1/indicators.json
 https://jbkunst.github.io/bcch-data/api/v1/series/F073.TCO.PRE.Z.D.json
+https://jbkunst.github.io/bcch-data/api/v1/series/BCCHDATA.CCNN.EXPORTACIONES_NETAS.V12.2018.T.json
 ```
 
 La actualización automática tiene dos oportunidades diarias programadas y también

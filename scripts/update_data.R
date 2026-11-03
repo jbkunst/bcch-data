@@ -108,28 +108,156 @@ format_indicator_period <- function(date, period_type) {
   )
 }
 
+derived_source <- "Cálculo bcch-data a partir de series del Banco Central de Chile"
+
+validate_derived_series <- function(specs, official_ids) {
+  required <- c(
+    "id", "name", "english_name", "frequency", "unit", "measure",
+    "adjustment", "operation", "source_ids", "formula", "reference_url"
+  )
+
+  for (spec in specs) {
+    missing <- setdiff(required, names(spec))
+    if (length(missing)) {
+      label <- if (!is.null(spec$id) && length(spec$id) == 1L && nzchar(spec$id)) {
+        spec$id
+      } else {
+        "<unknown>"
+      }
+      cli::cli_abort(
+        "Derived series {label} is missing: {paste(missing, collapse = ', ')}."
+      )
+    }
+    source_ids <- unname(unlist(spec$source_ids, use.names = FALSE))
+    expected_formula <- paste(source_ids, collapse = " - ")
+    if (!startsWith(spec$id, "BCCHDATA.") || !nzchar(spec$name) ||
+        !nzchar(spec$english_name) || !identical(spec$operation, "subtract") ||
+        length(source_ids) != 2L || anyDuplicated(source_ids) ||
+        any(!source_ids %in% official_ids) ||
+        !identical(spec$formula, expected_formula) ||
+        !grepl("^https://", spec$reference_url)) {
+      cli::cli_abort(
+        paste(
+          "Derived series {spec$id} needs a BCCHDATA ID, two distinct configured",
+          "sources, their subtract formula and an HTTPS reference URL."
+        )
+      )
+    }
+  }
+
+  invisible(specs)
+}
+
+derive_series <- function(spec, payloads, fetched_at) {
+  source_ids <- unname(unlist(spec$source_ids, use.names = FALSE))
+  minuend <- payloads[[source_ids[[1L]]]]
+  subtrahend <- payloads[[source_ids[[2L]]]]
+  if (!identical(minuend$frequency, spec$frequency) ||
+      !identical(subtrahend$frequency, spec$frequency)) {
+    cli::cli_abort("Derived series {spec$id} has incompatible source frequencies.")
+  }
+
+  minuend_dates <- as.character(minuend$observations$date)
+  subtrahend_dates <- as.character(subtrahend$observations$date)
+  if (!identical(minuend_dates, subtrahend_dates)) {
+    cli::cli_abort("Derived series {spec$id} requires identical source dates.")
+  }
+
+  values <- minuend$observations$value - subtrahend$observations$value
+  if (any(!is.finite(values))) {
+    cli::cli_abort("Derived series {spec$id} produced non-finite values.")
+  }
+  observations <- data.frame(
+    date = minuend_dates,
+    value = values,
+    stringsAsFactors = FALSE
+  )
+
+  list(
+    series_id = spec$id,
+    name = spec$name,
+    frequency = spec$frequency,
+    kind = "derived",
+    official = FALSE,
+    source = derived_source,
+    source_series = source_ids,
+    operation = spec$operation,
+    formula = spec$formula,
+    reference_url = spec$reference_url,
+    fetched_at = fetched_at,
+    last_observation = tail(observations$date, 1L),
+    observations = observations
+  )
+}
+
+derived_catalog_record <- function(spec, payload, catalog_data) {
+  source_ids <- unname(unlist(spec$source_ids, use.names = FALSE))
+  source_rows <- catalog_data[match(source_ids, catalog_data$series_id), , drop = FALSE]
+  if (anyNA(source_rows$series_id)) {
+    cli::cli_abort("Derived series {spec$id} has sources missing from catalog metadata.")
+  }
+
+  latest_source_date <- function(field) {
+    values <- source_rows[[field]]
+    values <- values[!is.na(values) & nzchar(values)]
+    if (length(values)) max(values) else NA_character_
+  }
+
+  data.frame(
+    series_id = spec$id,
+    frequency = spec$frequency,
+    spanish_title = paste0(spec$name, ", ", tolower(spec$measure)),
+    english_title = spec$english_name,
+    first_observation = payload$observations$date[[1L]],
+    last_observation = tail(payload$observations$date, 1L),
+    updated_at = latest_source_date("updated_at"),
+    created_at = latest_source_date("created_at"),
+    display_name = spec$name,
+    measure = spec$measure,
+    unit = spec$unit,
+    adjustment = spec$adjustment,
+    source = derived_source,
+    kind = "derived",
+    official = FALSE,
+    enrichment_version = enrichment_version,
+    stringsAsFactors = FALSE
+  )
+}
+
 token <- Sys.getenv("BCCH_TOKEN")
 if (!nzchar(token)) {
   cli::cli_abort("BCCH_TOKEN is not configured.")
 }
 
-catalog <- yaml::read_yaml(file.path("config", "series.yml"))$series
+series_config <- yaml::read_yaml(file.path("config", "series.yml"))
+catalog <- series_config$series
+derived_catalog <- series_config$derived_series
+if (is.null(derived_catalog)) derived_catalog <- list()
 series_ids <- vapply(catalog, function(x) x$id, character(1))
-series_names <- setNames(
+official_series_names <- setNames(
   vapply(catalog, function(x) x$name, character(1)),
   series_ids
 )
+derived_series_ids <- vapply(derived_catalog, function(x) x$id, character(1))
+derived_series_names <- setNames(
+  vapply(derived_catalog, function(x) x$name, character(1)),
+  derived_series_ids
+)
+published_series_ids <- c(series_ids, derived_series_ids)
+series_names <- c(official_series_names, derived_series_names)
 
-if (anyDuplicated(series_ids) || any(!nzchar(series_ids)) || any(!nzchar(series_names))) {
+if (anyDuplicated(published_series_ids) || any(!nzchar(published_series_ids)) ||
+    any(!nzchar(series_names))) {
   cli::cli_abort("Every catalog entry needs a unique id and a non-empty name.")
 }
+validate_derived_series(derived_catalog, series_ids)
 
 indicators <- yaml::read_yaml(file.path("config", "indicators.yml"))$indicators
 indicator_ids <- vapply(indicators, function(x) x$id, character(1))
 indicator_series_ids <- vapply(indicators, function(x) x$series_id, character(1))
 period_types <- vapply(indicators, function(x) x$period_type, character(1))
 
-if (anyDuplicated(indicator_ids) || any(!indicator_series_ids %in% series_ids)) {
+if (anyDuplicated(indicator_ids) || any(!indicator_series_ids %in% published_series_ids)) {
   cli::cli_abort("Indicators need unique IDs and series present in config/series.yml.")
 }
 if (any(!period_types %in% c("daily", "monthly", "quarterly", "rolling_quarter"))) {
@@ -137,7 +265,9 @@ if (any(!period_types %in% c("daily", "monthly", "quarterly", "rolling_quarter")
 }
 
 cli::cli_h1("Updating bcch-data")
-cli::cli_alert_success("Loaded {length(series_ids)} unique series from {.path config/series.yml}.")
+cli::cli_alert_success(
+  "Loaded {length(series_ids)} official and {length(derived_series_ids)} derived series from {.path config/series.yml}."
+)
 
 cli::cli_h2("Reading BCCh metadata")
 cli::cli_alert_info("Checking that every configured ID exists in the BCCh catalog.")
@@ -175,6 +305,14 @@ catalog_data <- catalog_data[c(
   "display_name", "measure", "unit", "adjustment", "source",
   "enrichment_version"
 )]
+catalog_data$kind <- "official"
+catalog_data$official <- TRUE
+catalog_data <- catalog_data[c(
+  "series_id", "frequency", "spanish_title", "english_title",
+  "first_observation", "last_observation", "updated_at", "created_at",
+  "display_name", "measure", "unit", "adjustment", "source",
+  "kind", "official", "enrichment_version"
+)]
 catalog_data <- catalog_data[order(catalog_data$series_id), , drop = FALSE]
 rownames(catalog_data) <- NULL
 cli::cli_alert_success(
@@ -184,8 +322,8 @@ cli::cli_alert_success(
 cli::cli_h2("Downloading observations")
 cli::cli_alert_info("Downloading the complete history of {length(series_ids)} series.")
 fetched_at <- format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
-payloads <- setNames(vector("list", length(series_ids)), series_ids)
-manifest_series <- setNames(vector("list", length(series_ids)), series_ids)
+payloads <- setNames(vector("list", length(published_series_ids)), published_series_ids)
+manifest_series <- setNames(vector("list", length(published_series_ids)), published_series_ids)
 observation_count <- 0L
 
 for (index in seq_along(series_ids)) {
@@ -219,6 +357,8 @@ for (index in seq_along(series_ids)) {
     series_id = id,
     name = series_names[[id]],
     frequency = frequency,
+    kind = "official",
+    official = TRUE,
     source = "Banco Central de Chile",
     fetched_at = fetched_at,
     last_observation = tail(observations$date, 1L),
@@ -228,6 +368,8 @@ for (index in seq_along(series_ids)) {
     path = paste0("series/", id, ".json"),
     name = series_names[[id]],
     frequency = frequency,
+    kind = "official",
+    official = TRUE,
     last_observation = tail(observations$date, 1L),
     observation_count = nrow(observations),
     fetched_at = fetched_at,
@@ -246,12 +388,50 @@ for (index in seq_along(series_ids)) {
 }
 cli::cli_alert_success("Downloaded {observation_count} observations.")
 
+if (length(derived_catalog)) {
+  cli::cli_h2("Deriving configured series")
+  for (spec in derived_catalog) {
+    id <- spec$id
+    payload <- derive_series(spec, payloads, fetched_at)
+    payloads[[id]] <- payload
+    manifest_series[[id]] <- list(
+      path = paste0("series/", id, ".json"),
+      name = spec$name,
+      frequency = spec$frequency,
+      kind = "derived",
+      official = FALSE,
+      source_series = unname(unlist(spec$source_ids, use.names = FALSE)),
+      operation = spec$operation,
+      formula = spec$formula,
+      reference_url = spec$reference_url,
+      last_observation = payload$last_observation,
+      observation_count = nrow(payload$observations),
+      fetched_at = fetched_at,
+      status = "ok"
+    )
+    observation_count <- observation_count + nrow(payload$observations)
+    log_inform(
+      "Derived {.code {id}} with {nrow(payload$observations)} observations."
+    )
+  }
+
+  derived_catalog_data <- do.call(
+    rbind,
+    lapply(derived_catalog, function(spec) {
+      derived_catalog_record(spec, payloads[[spec$id]], catalog_data)
+    })
+  )
+  catalog_data <- rbind(catalog_data, derived_catalog_data)
+  catalog_data <- catalog_data[order(catalog_data$series_id), , drop = FALSE]
+  rownames(catalog_data) <- NULL
+}
+
 series_dir <- file.path("api", "v1", "series")
 dir.create(series_dir, recursive = TRUE, showWarnings = FALSE)
 
 cli::cli_h2("Writing static API")
-cli::cli_progress_bar("Writing JSON files", total = length(series_ids))
-for (id in series_ids) {
+cli::cli_progress_bar("Writing JSON files", total = length(published_series_ids))
+for (id in published_series_ids) {
   jsonlite::write_json(
     payloads[[id]],
     file.path(series_dir, paste0(id, ".json")),
@@ -372,7 +552,7 @@ cli::cli_alert_success("Wrote {length(indicator_payloads)} indicators to {.path 
 
 existing_files <- list.files(series_dir, pattern = "[.]json$", full.names = TRUE)
 orphan_files <- existing_files[
-  !basename(existing_files) %in% paste0(series_ids, ".json")
+  !basename(existing_files) %in% paste0(published_series_ids, ".json")
 ]
 unlink(orphan_files)
 if (length(orphan_files) > 0L) {
@@ -385,7 +565,7 @@ manifest <- list(
   catalog_path = "catalog.json",
   catalog_series_count = nrow(catalog_data),
   catalog_updated_at = catalog_updated_at,
-  series_count = length(series_ids),
+  series_count = length(published_series_ids),
   indicators_path = "indicators.json",
   indicator_count = length(indicator_payloads),
   series = manifest_series
@@ -401,7 +581,7 @@ jsonlite::write_json(
 cli::cli_h1("Update complete")
 cli::cli_dl(
   list(
-    "Series" = length(series_ids),
+    "Series" = length(published_series_ids),
     "Observations" = sum(vapply(manifest_series, function(x) x$observation_count, numeric(1))),
     "Fetched at" = fetched_at,
     "Catalog" = catalog_path,
