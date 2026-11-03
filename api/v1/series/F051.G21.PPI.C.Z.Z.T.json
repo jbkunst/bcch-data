@@ -2,9 +2,11 @@
   "series_id": "F051.G21.PPI.C.Z.Z.T",
   "name": "Balance gobierno central",
   "frequency": "QUARTERLY",
+  "kind": "official",
+  "official": true,
   "source": "Banco Central de Chile",
-  "fetched_at": "2026-11-02T12:52:50Z",
-  "last_observation": "2026-04-01",
+  "fetched_at": "2026-11-03T00:50:33Z",
+  "last_observation": "2026-07-01",
   "observations": [
     {
       "date": "2001-10-01",
@@ -360,11 +362,15 @@
     },
     {
       "date": "2026-01-01",
-      "value": -0.631967103287123
+      "value": -0.624172037409912
     },
     {
       "date": "2026-04-01",
-      "value": -0.0567197811298302
+      "value": -0.0560264322378802
+    },
+    {
+      "date": "2026-07-01",
+      "value": -0.257806558296365
     }
   ]
 }
