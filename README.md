@@ -63,10 +63,12 @@ si sus registros son idénticos, el archivo no se reescribe. En cambio,
 ## Uso
 
 Para agregar una serie oficial, incorpora su código y nombre bajo `series` en
-`config/series.yml`. Una entrada bajo `derived_series` debe usar un ID propio con
-prefijo `BCCHDATA.`, declarar dos fuentes oficiales configuradas y una operación
-soportada. La primera operación disponible es `subtract`; no admite cadenas de
-derivadas ni fechas distintas entre las fuentes.
+`config/series.yml`. Cuando la metadata original no identifica correctamente la
+unidad, la entrada puede declarar `unit`; el generador aplica ese valor editorial
+al registro correspondiente del catálogo. Una entrada bajo `derived_series` debe
+usar un ID propio con prefijo `BCCHDATA.`, declarar dos fuentes oficiales
+configuradas y una operación soportada. La primera operación disponible es
+`subtract`; no admite cadenas de derivadas ni fechas distintas entre las fuentes.
 
 La actualización requiere `BCCH_TOKEN` como variable de entorno y usa `bcchr`; el
 token nunca se escribe en los datos.

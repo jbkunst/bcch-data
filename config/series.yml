@@ -14,6 +14,7 @@ series:
     name: "PIB, nivel desestacionalizado"
   - id: F032.PIB.V12.R.Z.2018.Z.Z.0.T
     name: "PIB, variación anual"
+    unit: "Puntos porcentuales"
   - id: F032.PIB.VAR.R.Z.2018.Z.Z.3.T
     name: "PIB, variación trimestral desestacionalizada"
   - id: F032.PIB.FAA.N.USD.2018.Z.Z.0.T
@@ -22,18 +23,24 @@ series:
   # Componentes del PIB
   - id: F033.CPR.V12.R.Z.2018.0.T
     name: "Consumo privado"
+    unit: "Puntos porcentuales"
   - id: F033.COG.V12.R.Z.2018.0.T
     name: "Consumo gobierno"
+    unit: "Puntos porcentuales"
   - id: F033.FKF.V12.R.Z.2018.0.T
     name: "FBCF"
+    unit: "Puntos porcentuales"
   - id: F033.FKF.PPB.Z.Z.2018.0.T
     name: "FBKF"
   - id: F033.VAX.V12.R.Z.2018.0.T
     name: "Variación de existencias"
+    unit: "Puntos porcentuales"
   - id: F033.XBS.V12.R.Z.2018.0.T
     name: "Contribución de exportaciones"
+    unit: "Puntos porcentuales"
   - id: F033.IBS.V12.R.Z.2018.0.T
     name: "Contribución de importaciones"
+    unit: "Puntos porcentuales"
 
   # Ahorro nacional
   - id: F038.AHO.PPB2.10.10.N.2018.CLP.T

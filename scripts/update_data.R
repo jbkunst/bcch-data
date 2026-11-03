@@ -68,6 +68,19 @@ enrich_catalog <- function(metadata) {
   metadata
 }
 
+# Aplica unidades editoriales explícitas sólo a las historias configuradas.
+apply_official_units <- function(metadata, specs) {
+  for (spec in specs) {
+    if (is.null(spec$unit)) next
+    index <- match(spec$id, metadata$series_id)
+    if (is.na(index)) {
+      cli::cli_abort("Configured series {spec$id} is missing from catalog metadata.")
+    }
+    metadata$unit[[index]] <- spec$unit
+  }
+  metadata
+}
+
 format_catalog_date <- function(value) {
   dates <- suppressWarnings(as.Date(value))
   ifelse(is.na(dates), NA_character_, format(dates, "%Y-%m-%d"))
@@ -109,6 +122,24 @@ format_indicator_period <- function(date, period_type) {
 }
 
 derived_source <- "Cálculo bcch-data a partir de series del Banco Central de Chile"
+
+# Valida IDs, nombres y unidades editoriales antes de consultar la API.
+validate_official_series <- function(specs) {
+  allowed <- c("id", "name", "unit")
+  for (spec in specs) {
+    unexpected <- setdiff(names(spec), allowed)
+    valid_unit <- is.null(spec$unit) ||
+      (is.character(spec$unit) && length(spec$unit) == 1L && nzchar(spec$unit))
+    if (!is.character(spec$id) || length(spec$id) != 1L || !nzchar(spec$id) ||
+        !is.character(spec$name) || length(spec$name) != 1L || !nzchar(spec$name) ||
+        length(unexpected) || !valid_unit) {
+      cli::cli_abort(
+        "Official series entries need id, name and an optional non-empty unit."
+      )
+    }
+  }
+  invisible(specs)
+}
 
 validate_derived_series <- function(specs, official_ids) {
   required <- c(
@@ -246,6 +277,7 @@ derived_series_names <- setNames(
 published_series_ids <- c(series_ids, derived_series_ids)
 series_names <- c(official_series_names, derived_series_names)
 
+validate_official_series(catalog)
 if (anyDuplicated(published_series_ids) || any(!nzchar(published_series_ids)) ||
     any(!nzchar(series_names))) {
   cli::cli_abort("Every catalog entry needs a unique id and a non-empty name.")
@@ -296,6 +328,7 @@ if (length(unknown_ids) > 0L) {
 cli::cli_alert_success("All {length(series_ids)} IDs were found in BCCh metadata.")
 
 catalog_data <- enrich_catalog(metadata[catalog_fields])
+catalog_data <- apply_official_units(catalog_data, catalog)
 for (field in c("first_observation", "last_observation", "updated_at", "created_at")) {
   catalog_data[[field]] <- format_catalog_date(catalog_data[[field]])
 }
