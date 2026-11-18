@@ -20,6 +20,18 @@ ene_name <- function(spec, indicator, branches) {
   paste(parts[nzchar(parts)], collapse = " · ")
 }
 
+ene_observations <- function(dates, values, quality) {
+  warnings <- c("poco_fiable", "no_fiable")
+  stopifnot(all(quality %in% c("sin_advertencia", "sin_dato", warnings)),
+            all(is.na(values) == (quality == "sin_dato")),
+            all(is.finite(values[!is.na(values)])))
+  lapply(seq_along(dates), function(i) {
+    point <- list(date = dates[[i]], value = values[[i]])
+    if (quality[[i]] %in% warnings) point$quality <- quality[[i]]
+    point
+  })
+}
+
 read_laboral <- function(previous, old_records, series_dir, fetched_at) {
   root <- Sys.getenv("LABORAL_DATA_API", "https://miparrar.github.io/laboral-data/api/v1")
   read_source <- function(path, simplify = FALSE) {
@@ -53,7 +65,7 @@ read_laboral <- function(previous, old_records, series_dir, fetched_at) {
     inventory_md5 <- unname(tools::md5sum(signature_file))
     unlink(signature_file)
     version <- list(source_sha256 = dataset$source_sha256, build_sha256 = dataset$build_sha256,
-                    inventory_md5 = inventory_md5, adapter_version = 1L, series_count = length(ids))
+                    inventory_md5 = inventory_md5, adapter_version = 2L, series_count = length(ids))
     versions[[id]] <- version
     if (identical(version, previous$laboral_data[[id]]) &&
         all(ids %in% names(old_records)) && all(ids %in% names(previous$series)) &&
@@ -90,22 +102,21 @@ read_laboral <- function(previous, old_records, series_dir, fetched_at) {
       provenance <- list(provider = "laboral-data", source_series_key = key)
       common <- c(list(frequency = dataset$frequency, kind = "official", official = TRUE), provenance)
       dates <- paste0(group$period, "-01")
-      history <- data.frame(date = dates, group[c("value", "quality_code", "quality", "trimestre_movil")])
       series_fields <- c(list(name = name), common,
                          list(last_observation = tail(dates, 1L), fetched_at = fetched_at))
       entries[[series_id]] <- c(list(path = paste0("series/", series_id, ".json")), series_fields,
                                  list(observation_count = nrow(group), status = "ok"))
-      histories[[series_id]] <- c(list(series_id = series_id), series_fields,
-        list(source = tab$source, unit = spec$unit, dimensions = spec[dimensions],
-             source_file = dataset$source_file, source_url = dataset$source_url,
-             source_sheet = spec$source_sheet, source_sha256 = dataset$source_sha256,
-             value_column = spec$value_column, note_column = spec$note_column,
-             analysis = indicator$analysis, observations = history))
+      histories[[series_id]] <- list(
+        series_id = series_id, name = name, frequency = dataset$frequency,
+        kind = "official", official = TRUE, source = tab$source, fetched_at = fetched_at,
+        last_observation = tail(dates, 1L),
+        observations = ene_observations(dates, group$value, group$quality)
+      )
       records[[series_id]] <- c(list(series_id = series_id, spanish_title = name, english_title = NULL,
         first_observation = dates[[1L]], last_observation = tail(dates, 1L),
         updated_at = substr(catalog$updated_at, 1L, 10L), created_at = NULL,
         display_name = name, measure = indicator$analysis$measurement_type, unit = spec$unit,
-        adjustment = NULL, source = tab$source, enrichment_version = enrichment_version), common)
+        dimensions = spec[dimensions], adjustment = NULL, source = tab$source, enrichment_version = enrichment_version), common)
     }
     message(id, ": generadas ", length(ids), " historias")
   }

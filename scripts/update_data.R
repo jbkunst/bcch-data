@@ -60,8 +60,7 @@ if (laboral_only && identical(previous$laboral_data, laboral$datasets) &&
 }
 
 for (id in names(histories)) {
-  write_api(histories[[id]], file.path(series_dir, paste0(id, ".json")),
-            pretty = !startsWith(id, "INE.ENE."))
+  write_api(histories[[id]], file.path(series_dir, paste0(id, ".json")), pretty = TRUE)
 }
 catalog_updated_at <- old_catalog$updated_at
 if (!identical(records, old_records)) {

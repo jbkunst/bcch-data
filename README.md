@@ -18,11 +18,27 @@ desocupación · Nacional** corresponde a
 La entrada de `manifest.json` apunta al archivo con su historia completa.
 El nombre visible omite el sexo agregado y conserva el territorio.
 
-La frecuencia `rolling_quarter` usa el día 1 del mes central para representar
-el trimestre móvil. Cada observación conserva su etiqueta de trimestre y las
-notas de calidad del INE. Los valores ausentes se publican como `null` con
-`quality = "sin_dato"`. La historia incluye unidad, dimensiones, reglas de
-análisis y referencia al Excel, hoja y columnas originales.
+### Formato de las historias
+
+Cada archivo `api/v1/series/<id>.json` se guarda con sangría de dos espacios y
+una clave por línea, también dentro de cada observación. Las series oficiales
+del BCCh y de la ENE comparten la cabecera `series_id`, `name`, `frequency`,
+`kind`, `official`, `source`, `fetched_at` y `last_observation`, seguida del
+arreglo `observations`, ordenado por fecha.
+
+Cada observación lleva `date` y `value`. En la ENE, `rolling_quarter` usa el día
+1 del mes central: `2010-02-01` representa enero–marzo de 2010.
+
+| Estimación ENE | `value` | Campo opcional `quality` |
+|---|---|---|
+| Sin advertencia | Número | Se omite |
+| Poco fiable | Número | `"poco_fiable"` |
+| No fiable | Número | `"no_fiable"` |
+| Sin dato | `null` | Se omite |
+
+La unidad, las dimensiones y la clave original (`source_series_key`) se consultan
+en `catalog.json`. Esa clave permite localizar la ficha del tabulado, su
+procedencia y las reglas de análisis en el [catálogo de laboral-data](https://miparrar.github.io/laboral-data/api/v1/catalog.json).
 
 `Rscript scripts/update_data.R --laboral-only` actualiza las historias ENE sobre
 la caché BCCh existente. El proceso descarga cada tabulado modificado una vez
