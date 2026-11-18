@@ -5,6 +5,32 @@ de Chile y mantiene una selección de historias como JSON estáticos actualizado
 automáticamente. Los datos alimentan el dashboard **Indicadores económicos** y
 pueden ser consumidos directamente por otras aplicaciones.
 
+También publica una historia por cada combinación de indicador, región, sexo,
+edad o rama que distribuye [laboral-data](https://github.com/miparrar/laboral-data)
+a partir de los tabulados de la Encuesta Nacional de Empleo del INE.
+
+## Series de empleo del INE
+
+Busca `provider = "laboral-data"` en `catalog.json`. El ID es `INE.ENE.` seguido
+de la clave original con puntos en lugar de barras. Por ejemplo, **Tasa de
+desocupación · Nacional** corresponde a
+`INE.ENE.indicadores_principales.tasa_desocupacion.nacional.total`.
+La entrada de `manifest.json` apunta al archivo con su historia completa.
+El nombre visible omite el sexo agregado y conserva el territorio.
+
+La frecuencia `rolling_quarter` usa el día 1 del mes central para representar
+el trimestre móvil. Cada observación conserva su etiqueta de trimestre y las
+notas de calidad del INE. Los valores ausentes se publican como `null` con
+`quality = "sin_dato"`. La historia incluye unidad, dimensiones, reglas de
+análisis y referencia al Excel, hoja y columnas originales.
+
+`Rscript scripts/update_data.R --laboral-only` actualiza las historias ENE sobre
+la caché BCCh existente. El proceso descarga cada tabulado modificado una vez
+y reutiliza las historias de los demás. Comprueba la huella del Excel, la del
+procesamiento y el inventario de series. `LABORAL_DATA_API` permite usar una
+copia local de la API de origen. GitHub Actions valida la API y renderiza el
+dashboard antes de publicar.
+
 ## ¿Por qué existe?
 
 La [Base de Datos Estadísticos (BDE)](https://si3.bcentral.cl/siete) del Banco Central de Chile sigue siendo la fuente oficial y completa. `bcch-data` no busca reemplazarla, sino complementarla con una capa pequeña para dos casos de uso frecuentes:
