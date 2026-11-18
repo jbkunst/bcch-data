@@ -102,11 +102,22 @@ def validate_catalog(source: ApiSource, manifest: dict[str, Any]) -> dict[str, d
         require(isinstance(record, dict), f"{label}: expected an object")
         fields = set(record)
         require(required_fields <= fields, f"{label}: missing fields")
-        require(fields <= required_fields | provenance_fields, f"{label}: unexpected fields")
         series_id = record.get("series_id")
         require(isinstance(series_id, str) and series_id, f"{label}: invalid series_id")
         require(series_id not in catalog, f"catalog: duplicate series_id {series_id}")
-        for field in ("frequency", "spanish_title", "english_title", "display_name"):
+        ene = series_id.startswith("INE.ENE.")
+        extra = {"provider", "source_series_key"} if ene else set()
+        require(fields <= required_fields | provenance_fields | extra, f"{label}: unexpected fields")
+        if ene:
+            key = record.get("source_series_key")
+            require(isinstance(key, str) and series_id == "INE.ENE." + key.replace("/", "."),
+                    f"{series_id}: inconsistent source key")
+            require(record.get("provider") == "laboral-data" and record.get("frequency") == "rolling_quarter",
+                    f"{series_id}: invalid ENE metadata")
+        title_fields = ("frequency", "spanish_title", "display_name")
+        if not ene or record.get("english_title") is not None:
+            title_fields += ("english_title",)
+        for field in title_fields:
             require(
                 isinstance(record.get(field), str) and bool(record[field]),
                 f"{series_id}: invalid {field}",
@@ -128,7 +139,7 @@ def validate_catalog(source: ApiSource, manifest: dict[str, Any]) -> dict[str, d
         if first is not None and last is not None:
             require(first <= last, f"{series_id}: observation range is reversed")
         parse_iso_date(record.get("updated_at"), f"{series_id}.updated_at")
-        parse_iso_date(record.get("created_at"), f"{series_id}.created_at")
+        parse_iso_date(record.get("created_at"), f"{series_id}.created_at", nullable=ene)
 
         version = record.get("enrichment_version")
         require(isinstance(version, int) and version > 0, f"{series_id}: invalid enrichment_version")
@@ -168,7 +179,15 @@ def validate_series(
     require(official == entry.get("official", True), f"{series_id}: manifest official mismatch")
     require(official == catalog_record.get("official", True), f"{series_id}: catalog official mismatch")
 
-    if kind == "official":
+    ene = series_id.startswith("INE.ENE.")
+    if ene:
+        require(payload.get("source") == catalog_record.get("source") == "Instituto Nacional de Estadísticas (Chile)",
+                f"{series_id}: invalid ENE source")
+        for field in ("provider", "source_series_key"):
+            require(payload.get(field) == entry.get(field) == catalog_record[field],
+                    f"{series_id}: inconsistent {field}")
+        require(payload["name"] == catalog_record["display_name"], f"{series_id}: inconsistent ENE name")
+    elif kind == "official":
         require(payload.get("source") == "Banco Central de Chile", f"{series_id}: bad source")
     else:
         require(series_id.startswith("BCCHDATA."), f"{series_id}: invalid derived ID")
@@ -208,7 +227,18 @@ def validate_series(
             date.fromisoformat(observation_date)
         except ValueError as error:
             raise ApiError(f"{series_id}[{index}]: invalid ISO date") from error
-        require(valid_number(observation.get("value")), f"{series_id}[{index}]: invalid value")
+        missing = ene and observation.get("quality") == "sin_dato"
+        if ene:
+            require(observation_date.endswith("-01") and bool(observation.get("trimestre_movil")),
+                    f"{series_id}[{index}]: invalid ENE period")
+            quality = observation.get("quality")
+            code = observation.get("quality_code")
+            allowed = {"sin_advertencia": (None,), "poco_fiable": ("a",), "no_fiable": ("b",),
+                       "sin_dato": (None, "a", "b")}
+            require("quality_code" in observation and code in allowed.get(quality, ()),
+                    f"{series_id}[{index}]: invalid ENE quality")
+        require("value" in observation and (observation["value"] is None if missing else valid_number(observation["value"])),
+                f"{series_id}[{index}]: invalid value")
         dates.append(observation_date)
 
     require(dates == sorted(dates), f"{series_id}: observations are not ordered")
@@ -264,6 +294,16 @@ def validate(root: str) -> tuple[int, int, int, int]:
     require(manifest.get("series_count") == len(series), "manifest series_count mismatch")
     require(manifest.get("indicators_path") == "indicators.json", "unexpected indicators_path")
 
+    ene_ids = {key for key in catalog if key.startswith("INE.ENE.")}
+    if "laboral_data" in manifest or ene_ids:
+        datasets = manifest.get("laboral_data", {})
+        require(bool(datasets) and ene_ids <= series.keys(), "incomplete ENE cache")
+        counts: dict[str, int] = {}
+        for key in ene_ids:
+            dataset = catalog[key]["source_series_key"].split("/")[0]
+            counts[dataset] = counts.get(dataset, 0) + 1
+        require(counts == {key: meta["series_count"] for key, meta in datasets.items()},
+                "ENE inventory count mismatch")
     payloads: dict[str, dict[str, Any]] = {}
     observation_count = 0
     expected_paths: set[str] = set()

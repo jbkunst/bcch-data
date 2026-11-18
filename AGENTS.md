@@ -2,18 +2,20 @@
 
 ## Scope
 
-- This repository publishes a static cache/API of Banco Central de Chile series
+- This repository publishes a static cache/API of Banco Central de Chile and INE ENE series
   and a Quarto dashboard built from that cache.
-- Treat `config/series.yml` and `config/indicators.yml` as the declarative inputs.
+- Treat `config/series.yml` and `config/indicators.yml` as the declarative BCCh inputs.
+- Discover ENE histories from the published laboral-data catalog. Preserve its
+  series keys, quality flags, rolling-quarter periods and source provenance.
 - Treat `scripts/update_data.R` as the only generator of `api/v1/**`; do not edit
-  generated JSON by hand. `catalog.json` contains all BCCh metadata, while the
-  manifest indexes only the configured histories cached under `series/`.
+  generated JSON by hand. `catalog.json` contains all BCCh metadata and ENE records, while the
+  manifest indexes only the published histories cached under `series/`.
 - The dashboard must read local JSON and must not call the BCCh API directly.
 
 ## Data rules
 
 - Preserve complete histories, ordered from oldest to newest, with unique dates
-  and finite numeric values.
+  and finite numeric values. ENE observations flagged `sin_dato` retain a null value.
 - Derive highlighted indicators from the downloaded series without extra API
   requests, and write the manifest only after all other output succeeds.
 - Preserve the versioned catalog contract and its editorial enrichment when
