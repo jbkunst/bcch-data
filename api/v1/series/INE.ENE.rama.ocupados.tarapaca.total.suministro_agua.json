@@ -1,1 +1,827 @@
-{"series_id":"INE.ENE.rama.ocupados.tarapaca.total.suministro_agua","name":"Personas ocupadas según rama de actividad económica · Tarapacá · Suministro de agua","frequency":"rolling_quarter","kind":"official","official":true,"provider":"laboral-data","source_series_key":"rama/ocupados/tarapaca/total/suministro_agua","last_observation":"2026-08-01","fetched_at":"2026-11-18T03:22:11Z","source":"Instituto Nacional de Estadísticas (Chile)","unit":"thousand_persons","dimensions":{"region":"tarapaca","sex":"total","branch":"suministro_agua"},"source_file":"rama.xlsx","source_url":"https://www.ine.gob.cl/docs/default-source/ocupacion-y-desocupacion/cuadros-estadisticos/series-vigentes/rama.xlsx?sfvrsn=23a76b12_214","source_sheet":"TA","source_sha256":"2723e9acd4d6e34e8ced6e6145661216a696eb3920eb0c177f414e26e273331c","value_column":"N","note_column":"M","analysis":{"measurement_type":"estimated_count","allowed":["serie_temporal","variacion_absoluta","variacion_relativa","comparacion_periodos","comparacion_territorial","brecha_por_sexo","comparacion_ramas"],"warnings":["Estimaciones expandidas en miles de personas; no son recuentos censales.","No sumar períodos de trimestres móviles superpuestos.","No sumar totales con sus categorías ni regiones con el total nacional.","No inferir significación estadística sin errores estándar y diseño muestral."]},"observations":[{"date":"2013-02-01","value":0.252589111516603,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ene - Mar"},{"date":"2013-03-01","value":0.38719264816067,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Feb - Abr"},{"date":"2013-04-01","value":0.516049315420614,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Mar - May"},{"date":"2013-05-01","value":0.426260777301169,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Abr - Jun"},{"date":"2013-06-01","value":0.28650099577185,"quality_code":"b","quality":"no_fiable","trimestre_movil":"May - Jul"},{"date":"2013-07-01","value":0.105363384112787,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jun - Ago"},{"date":"2013-08-01","value":0.27335783507472,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jul - Sep"},{"date":"2013-09-01","value":0.358424146246071,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ago - Oct"},{"date":"2013-10-01","value":0.368474210670672,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Sep - Nov"},{"date":"2013-11-01","value":0.725609344696949,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Oct - Dic"},{"date":"2013-12-01","value":0.610793129738378,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Nov - Ene"},{"date":"2014-01-01","value":0.963986925106768,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Dic - Feb"},{"date":"2014-02-01","value":0.695803867491159,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ene - Mar"},{"date":"2014-03-01","value":0.794943017618097,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Feb - Abr"},{"date":"2014-04-01","value":0.552656126271782,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Mar - May"},{"date":"2014-05-01","value":0.614922061263003,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Abr - Jun"},{"date":"2014-06-01","value":0.545592586649758,"quality_code":"b","quality":"no_fiable","trimestre_movil":"May - Jul"},{"date":"2014-07-01","value":0.815002651764394,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jun - Ago"},{"date":"2014-08-01","value":0.68586114201227,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jul - Sep"},{"date":"2014-09-01","value":0.914019705036384,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ago - Oct"},{"date":"2014-10-01","value":0.713708703563593,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Sep - Nov"},{"date":"2014-11-01","value":0.583808925147504,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Oct - Dic"},{"date":"2014-12-01","value":0.483217058524524,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Nov - Ene"},{"date":"2015-01-01","value":0.572250666469442,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Dic - Feb"},{"date":"2015-02-01","value":0.436338163083797,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ene - Mar"},{"date":"2015-03-01","value":0.569063948187481,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Feb - Abr"},{"date":"2015-04-01","value":0.495794855741887,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Mar - May"},{"date":"2015-05-01","value":0.49620488174936,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Abr - Jun"},{"date":"2015-06-01","value":0.27346908237574,"quality_code":"b","quality":"no_fiable","trimestre_movil":"May - Jul"},{"date":"2015-07-01","value":0.361236525738576,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jun - Ago"},{"date":"2015-08-01","value":0.59442990809301,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jul - Sep"},{"date":"2015-09-01","value":0.631878498571382,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ago - Oct"},{"date":"2015-10-01","value":0.668784549722459,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Sep - Nov"},{"date":"2015-11-01","value":0.515100953013991,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Oct - Dic"},{"date":"2015-12-01","value":0.732489355985226,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Nov - Ene"},{"date":"2016-01-01","value":0.405041473081089,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Dic - Feb"},{"date":"2016-02-01","value":0.486253640719283,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ene - Mar"},{"date":"2016-03-01","value":0.27579305136922,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Feb - Abr"},{"date":"2016-04-01","value":0.291304938330628,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Mar - May"},{"date":"2016-05-01","value":0.43891453834196,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Abr - Jun"},{"date":"2016-06-01","value":0.497915308050123,"quality_code":"b","quality":"no_fiable","trimestre_movil":"May - Jul"},{"date":"2016-07-01","value":0.556191131852503,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jun - Ago"},{"date":"2016-08-01","value":0.579459177252323,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jul - Sep"},{"date":"2016-09-01","value":0.649151252278524,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ago - Oct"},{"date":"2016-10-01","value":0.793382943091944,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Sep - Nov"},{"date":"2016-11-01","value":0.77896633843407,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Oct - Dic"},{"date":"2016-12-01","value":0.793612515997995,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Nov - Ene"},{"date":"2017-01-01","value":0.87845413167201,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Dic - Feb"},{"date":"2017-02-01","value":0.847426353331336,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ene - Mar"},{"date":"2017-03-01","value":1.08933159257036,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Feb - Abr"},{"date":"2017-04-01","value":1.56793701023001,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Mar - May"},{"date":"2017-05-01","value":1.82947646234686,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Abr - Jun"},{"date":"2017-06-01","value":1.41187747703247,"quality_code":"b","quality":"no_fiable","trimestre_movil":"May - Jul"},{"date":"2017-07-01","value":1.64897716768801,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jun - Ago"},{"date":"2017-08-01","value":2.36175302531212,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jul - Sep"},{"date":"2017-09-01","value":2.29516440853306,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ago - Oct"},{"date":"2017-10-01","value":1.59442934536879,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Sep - Nov"},{"date":"2017-11-01","value":1.8852278955468,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Oct - Dic"},{"date":"2017-12-01","value":1.9380039654664,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Nov - Ene"},{"date":"2018-01-01","value":2.17836816729786,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Dic - Feb"},{"date":"2018-02-01","value":1.51122017280041,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ene - Mar"},{"date":"2018-03-01","value":2.03601817503633,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Feb - Abr"},{"date":"2018-04-01","value":1.81398478423443,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Mar - May"},{"date":"2018-05-01","value":1.54850537543699,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Abr - Jun"},{"date":"2018-06-01","value":0.974276501586593,"quality_code":"b","quality":"no_fiable","trimestre_movil":"May - Jul"},{"date":"2018-07-01","value":0.97105645613386,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jun - Ago"},{"date":"2018-08-01","value":1.1475940070742,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jul - Sep"},{"date":"2018-09-01","value":1.8567949961164,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ago - Oct"},{"date":"2018-10-01","value":1.68012719805693,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Sep - Nov"},{"date":"2018-11-01","value":1.60415254555203,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Oct - Dic"},{"date":"2018-12-01","value":1.04656597058674,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Nov - Ene"},{"date":"2019-01-01","value":0.998223018652229,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Dic - Feb"},{"date":"2019-02-01","value":0.459383448659059,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ene - Mar"},{"date":"2019-03-01","value":1.07168549878449,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Feb - Abr"},{"date":"2019-04-01","value":1.09148035418032,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Mar - May"},{"date":"2019-05-01","value":0.889634469119474,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Abr - Jun"},{"date":"2019-06-01","value":0.40970205440335,"quality_code":"b","quality":"no_fiable","trimestre_movil":"May - Jul"},{"date":"2019-07-01","value":0.675787676780264,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jun - Ago"},{"date":"2019-08-01","value":0.823331040006803,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jul - Sep"},{"date":"2019-09-01","value":0.998786418169545,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ago - Oct"},{"date":"2019-10-01","value":1.29826447986194,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Sep - Nov"},{"date":"2019-11-01","value":1.22413383827308,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Oct - Dic"},{"date":"2019-12-01","value":0.933829110307606,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Nov - Ene"},{"date":"2020-01-01","value":1.19214634695066,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Dic - Feb"},{"date":"2020-02-01","value":1.79573685783353,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ene - Mar"},{"date":"2020-03-01","value":1.67829979066414,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Feb - Abr"},{"date":"2020-04-01","value":1.76904648885086,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Mar - May"},{"date":"2020-05-01","value":1.51558648853849,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Abr - Jun"},{"date":"2020-06-01","value":2.31335204306542,"quality_code":"b","quality":"no_fiable","trimestre_movil":"May - Jul"},{"date":"2020-07-01","value":1.75273441756935,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jun - Ago"},{"date":"2020-08-01","value":2.26941349188247,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jul - Sep"},{"date":"2020-09-01","value":2.35585074863508,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ago - Oct"},{"date":"2020-10-01","value":2.43878305855343,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Sep - Nov"},{"date":"2020-11-01","value":1.94429800474689,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Oct - Dic"},{"date":"2020-12-01","value":1.41592559202151,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Nov - Ene"},{"date":"2021-01-01","value":1.49000056763219,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Dic - Feb"},{"date":"2021-02-01","value":1.32484817266782,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ene - Mar"},{"date":"2021-03-01","value":1.13594928261841,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Feb - Abr"},{"date":"2021-04-01","value":1.15961109633574,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Mar - May"},{"date":"2021-05-01","value":1.1820801599091,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Abr - Jun"},{"date":"2021-06-01","value":1.41243142255958,"quality_code":"b","quality":"no_fiable","trimestre_movil":"May - Jul"},{"date":"2021-07-01","value":2.40792284491083,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jun - Ago"},{"date":"2021-08-01","value":2.16082457307243,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jul - Sep"},{"date":"2021-09-01","value":2.24463868091466,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ago - Oct"},{"date":"2021-10-01","value":1.70498560865111,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Sep - Nov"},{"date":"2021-11-01","value":2.05358009617681,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Oct - Dic"},{"date":"2021-12-01","value":1.79609229860931,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Nov - Ene"},{"date":"2022-01-01","value":0.540054374389789,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Dic - Feb"},{"date":"2022-02-01","value":0.508168989102995,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ene - Mar"},{"date":"2022-03-01","value":0.453606440132869,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Feb - Abr"},{"date":"2022-04-01","value":0.689642230566868,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Mar - May"},{"date":"2022-05-01","value":0.526007609222198,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Abr - Jun"},{"date":"2022-06-01","value":0.727036726118655,"quality_code":"b","quality":"no_fiable","trimestre_movil":"May - Jul"},{"date":"2022-07-01","value":0.547404504821736,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jun - Ago"},{"date":"2022-08-01","value":0.527629995424287,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jul - Sep"},{"date":"2022-09-01","value":0.756644482137942,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ago - Oct"},{"date":"2022-10-01","value":0.762701990505814,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Sep - Nov"},{"date":"2022-11-01","value":1.43183526638042,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Oct - Dic"},{"date":"2022-12-01","value":1.04042876986368,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Nov - Ene"},{"date":"2023-01-01","value":1.84563712853286,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Dic - Feb"},{"date":"2023-02-01","value":1.56136809152088,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ene - Mar"},{"date":"2023-03-01","value":1.49053396130634,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Feb - Abr"},{"date":"2023-04-01","value":1.44295135084818,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Mar - May"},{"date":"2023-05-01","value":1.67038771230478,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Abr - Jun"},{"date":"2023-06-01","value":1.83525893232375,"quality_code":"b","quality":"no_fiable","trimestre_movil":"May - Jul"},{"date":"2023-07-01","value":2.38313791309622,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jun - Ago"},{"date":"2023-08-01","value":2.37425765651965,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jul - Sep"},{"date":"2023-09-01","value":2.26562989097109,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ago - Oct"},{"date":"2023-10-01","value":2.38393811425774,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Sep - Nov"},{"date":"2023-11-01","value":2.55521193204976,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Oct - Dic"},{"date":"2023-12-01","value":2.70347541021321,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Nov - Ene"},{"date":"2024-01-01","value":2.07269971312571,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Dic - Feb"},{"date":"2024-02-01","value":2.29393384593194,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ene - Mar"},{"date":"2024-03-01","value":2.12410728553802,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Feb - Abr"},{"date":"2024-04-01","value":2.1786433125613,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Mar - May"},{"date":"2024-05-01","value":1.40069481811116,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Abr - Jun"},{"date":"2024-06-01","value":1.19220224480523,"quality_code":"b","quality":"no_fiable","trimestre_movil":"May - Jul"},{"date":"2024-07-01","value":0.89035506828426,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jun - Ago"},{"date":"2024-08-01","value":1.05270594025739,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jul - Sep"},{"date":"2024-09-01","value":1.52450509399967,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ago - Oct"},{"date":"2024-10-01","value":1.42105447351429,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Sep - Nov"},{"date":"2024-11-01","value":1.10486472233516,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Oct - Dic"},{"date":"2024-12-01","value":1.07819984879315,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Nov - Ene"},{"date":"2025-01-01","value":0.665924449868293,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Dic - Feb"},{"date":"2025-02-01","value":1.26148095925093,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ene - Mar"},{"date":"2025-03-01","value":1.08197088181306,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Feb - Abr"},{"date":"2025-04-01","value":1.79512009981793,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Mar - May"},{"date":"2025-05-01","value":1.76182809681077,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Abr - Jun"},{"date":"2025-06-01","value":1.4227478020107,"quality_code":"b","quality":"no_fiable","trimestre_movil":"May - Jul"},{"date":"2025-07-01","value":1.26971108345668,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jun - Ago"},{"date":"2025-08-01","value":1.24476668055462,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jul - Sep"},{"date":"2025-09-01","value":1.63134395892262,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ago - Oct"},{"date":"2025-10-01","value":1.2004615887265,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Sep - Nov"},{"date":"2025-11-01","value":1.0865928588304,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Oct - Dic"},{"date":"2025-12-01","value":0.748866813685523,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Nov - Ene"},{"date":"2026-01-01","value":0.843676350671029,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Dic - Feb"},{"date":"2026-02-01","value":1.84136252139735,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Ene - Mar"},{"date":"2026-03-01","value":2.18334001324178,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Feb - Abr"},{"date":"2026-04-01","value":2.42607684232639,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Mar - May"},{"date":"2026-05-01","value":2.16832056620212,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Abr - Jun"},{"date":"2026-06-01","value":1.79037806547649,"quality_code":"b","quality":"no_fiable","trimestre_movil":"May - Jul"},{"date":"2026-07-01","value":1.66073925478465,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jun - Ago"},{"date":"2026-08-01","value":1.17859936920046,"quality_code":"b","quality":"no_fiable","trimestre_movil":"Jul - Sep"}]}
+{
+  "series_id": "INE.ENE.rama.ocupados.tarapaca.total.suministro_agua",
+  "name": "Personas ocupadas según rama de actividad económica · Tarapacá · Suministro de agua",
+  "frequency": "rolling_quarter",
+  "kind": "official",
+  "official": true,
+  "source": "Instituto Nacional de Estadísticas (Chile)",
+  "fetched_at": "2026-11-18T03:40:47Z",
+  "last_observation": "2026-08-01",
+  "observations": [
+    {
+      "date": "2013-02-01",
+      "value": 0.252589111516603,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2013-03-01",
+      "value": 0.38719264816067,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2013-04-01",
+      "value": 0.516049315420614,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2013-05-01",
+      "value": 0.426260777301169,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2013-06-01",
+      "value": 0.28650099577185,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2013-07-01",
+      "value": 0.105363384112787,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2013-08-01",
+      "value": 0.27335783507472,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2013-09-01",
+      "value": 0.358424146246071,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2013-10-01",
+      "value": 0.368474210670672,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2013-11-01",
+      "value": 0.725609344696949,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2013-12-01",
+      "value": 0.610793129738378,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2014-01-01",
+      "value": 0.963986925106768,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2014-02-01",
+      "value": 0.695803867491159,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2014-03-01",
+      "value": 0.794943017618097,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2014-04-01",
+      "value": 0.552656126271782,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2014-05-01",
+      "value": 0.614922061263003,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2014-06-01",
+      "value": 0.545592586649758,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2014-07-01",
+      "value": 0.815002651764394,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2014-08-01",
+      "value": 0.68586114201227,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2014-09-01",
+      "value": 0.914019705036384,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2014-10-01",
+      "value": 0.713708703563593,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2014-11-01",
+      "value": 0.583808925147504,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2014-12-01",
+      "value": 0.483217058524524,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2015-01-01",
+      "value": 0.572250666469442,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2015-02-01",
+      "value": 0.436338163083797,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2015-03-01",
+      "value": 0.569063948187481,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2015-04-01",
+      "value": 0.495794855741887,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2015-05-01",
+      "value": 0.49620488174936,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2015-06-01",
+      "value": 0.27346908237574,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2015-07-01",
+      "value": 0.361236525738576,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2015-08-01",
+      "value": 0.59442990809301,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2015-09-01",
+      "value": 0.631878498571382,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2015-10-01",
+      "value": 0.668784549722459,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2015-11-01",
+      "value": 0.515100953013991,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2015-12-01",
+      "value": 0.732489355985226,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2016-01-01",
+      "value": 0.405041473081089,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2016-02-01",
+      "value": 0.486253640719283,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2016-03-01",
+      "value": 0.27579305136922,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2016-04-01",
+      "value": 0.291304938330628,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2016-05-01",
+      "value": 0.43891453834196,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2016-06-01",
+      "value": 0.497915308050123,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2016-07-01",
+      "value": 0.556191131852503,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2016-08-01",
+      "value": 0.579459177252323,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2016-09-01",
+      "value": 0.649151252278524,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2016-10-01",
+      "value": 0.793382943091944,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2016-11-01",
+      "value": 0.77896633843407,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2016-12-01",
+      "value": 0.793612515997995,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2017-01-01",
+      "value": 0.87845413167201,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2017-02-01",
+      "value": 0.847426353331336,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2017-03-01",
+      "value": 1.08933159257036,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2017-04-01",
+      "value": 1.56793701023001,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2017-05-01",
+      "value": 1.82947646234686,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2017-06-01",
+      "value": 1.41187747703247,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2017-07-01",
+      "value": 1.64897716768801,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2017-08-01",
+      "value": 2.36175302531212,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2017-09-01",
+      "value": 2.29516440853306,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2017-10-01",
+      "value": 1.59442934536879,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2017-11-01",
+      "value": 1.8852278955468,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2017-12-01",
+      "value": 1.9380039654664,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2018-01-01",
+      "value": 2.17836816729786,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2018-02-01",
+      "value": 1.51122017280041,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2018-03-01",
+      "value": 2.03601817503633,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2018-04-01",
+      "value": 1.81398478423443,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2018-05-01",
+      "value": 1.54850537543699,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2018-06-01",
+      "value": 0.974276501586593,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2018-07-01",
+      "value": 0.97105645613386,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2018-08-01",
+      "value": 1.1475940070742,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2018-09-01",
+      "value": 1.8567949961164,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2018-10-01",
+      "value": 1.68012719805693,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2018-11-01",
+      "value": 1.60415254555203,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2018-12-01",
+      "value": 1.04656597058674,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2019-01-01",
+      "value": 0.998223018652229,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2019-02-01",
+      "value": 0.459383448659059,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2019-03-01",
+      "value": 1.07168549878449,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2019-04-01",
+      "value": 1.09148035418032,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2019-05-01",
+      "value": 0.889634469119474,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2019-06-01",
+      "value": 0.40970205440335,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2019-07-01",
+      "value": 0.675787676780264,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2019-08-01",
+      "value": 0.823331040006803,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2019-09-01",
+      "value": 0.998786418169545,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2019-10-01",
+      "value": 1.29826447986194,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2019-11-01",
+      "value": 1.22413383827308,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2019-12-01",
+      "value": 0.933829110307606,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2020-01-01",
+      "value": 1.19214634695066,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2020-02-01",
+      "value": 1.79573685783353,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2020-03-01",
+      "value": 1.67829979066414,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2020-04-01",
+      "value": 1.76904648885086,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2020-05-01",
+      "value": 1.51558648853849,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2020-06-01",
+      "value": 2.31335204306542,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2020-07-01",
+      "value": 1.75273441756935,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2020-08-01",
+      "value": 2.26941349188247,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2020-09-01",
+      "value": 2.35585074863508,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2020-10-01",
+      "value": 2.43878305855343,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2020-11-01",
+      "value": 1.94429800474689,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2020-12-01",
+      "value": 1.41592559202151,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2021-01-01",
+      "value": 1.49000056763219,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2021-02-01",
+      "value": 1.32484817266782,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2021-03-01",
+      "value": 1.13594928261841,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2021-04-01",
+      "value": 1.15961109633574,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2021-05-01",
+      "value": 1.1820801599091,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2021-06-01",
+      "value": 1.41243142255958,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2021-07-01",
+      "value": 2.40792284491083,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2021-08-01",
+      "value": 2.16082457307243,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2021-09-01",
+      "value": 2.24463868091466,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2021-10-01",
+      "value": 1.70498560865111,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2021-11-01",
+      "value": 2.05358009617681,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2021-12-01",
+      "value": 1.79609229860931,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2022-01-01",
+      "value": 0.540054374389789,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2022-02-01",
+      "value": 0.508168989102995,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2022-03-01",
+      "value": 0.453606440132869,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2022-04-01",
+      "value": 0.689642230566868,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2022-05-01",
+      "value": 0.526007609222198,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2022-06-01",
+      "value": 0.727036726118655,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2022-07-01",
+      "value": 0.547404504821736,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2022-08-01",
+      "value": 0.527629995424287,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2022-09-01",
+      "value": 0.756644482137942,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2022-10-01",
+      "value": 0.762701990505814,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2022-11-01",
+      "value": 1.43183526638042,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2022-12-01",
+      "value": 1.04042876986368,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2023-01-01",
+      "value": 1.84563712853286,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2023-02-01",
+      "value": 1.56136809152088,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2023-03-01",
+      "value": 1.49053396130634,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2023-04-01",
+      "value": 1.44295135084818,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2023-05-01",
+      "value": 1.67038771230478,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2023-06-01",
+      "value": 1.83525893232375,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2023-07-01",
+      "value": 2.38313791309622,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2023-08-01",
+      "value": 2.37425765651965,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2023-09-01",
+      "value": 2.26562989097109,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2023-10-01",
+      "value": 2.38393811425774,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2023-11-01",
+      "value": 2.55521193204976,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2023-12-01",
+      "value": 2.70347541021321,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2024-01-01",
+      "value": 2.07269971312571,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2024-02-01",
+      "value": 2.29393384593194,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2024-03-01",
+      "value": 2.12410728553802,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2024-04-01",
+      "value": 2.1786433125613,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2024-05-01",
+      "value": 1.40069481811116,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2024-06-01",
+      "value": 1.19220224480523,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2024-07-01",
+      "value": 0.89035506828426,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2024-08-01",
+      "value": 1.05270594025739,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2024-09-01",
+      "value": 1.52450509399967,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2024-10-01",
+      "value": 1.42105447351429,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2024-11-01",
+      "value": 1.10486472233516,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2024-12-01",
+      "value": 1.07819984879315,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2025-01-01",
+      "value": 0.665924449868293,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2025-02-01",
+      "value": 1.26148095925093,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2025-03-01",
+      "value": 1.08197088181306,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2025-04-01",
+      "value": 1.79512009981793,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2025-05-01",
+      "value": 1.76182809681077,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2025-06-01",
+      "value": 1.4227478020107,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2025-07-01",
+      "value": 1.26971108345668,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2025-08-01",
+      "value": 1.24476668055462,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2025-09-01",
+      "value": 1.63134395892262,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2025-10-01",
+      "value": 1.2004615887265,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2025-11-01",
+      "value": 1.0865928588304,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2025-12-01",
+      "value": 0.748866813685523,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2026-01-01",
+      "value": 0.843676350671029,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2026-02-01",
+      "value": 1.84136252139735,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2026-03-01",
+      "value": 2.18334001324178,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2026-04-01",
+      "value": 2.42607684232639,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2026-05-01",
+      "value": 2.16832056620212,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2026-06-01",
+      "value": 1.79037806547649,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2026-07-01",
+      "value": 1.66073925478465,
+      "quality": "no_fiable"
+    },
+    {
+      "date": "2026-08-01",
+      "value": 1.17859936920046,
+      "quality": "no_fiable"
+    }
+  ]
+}
