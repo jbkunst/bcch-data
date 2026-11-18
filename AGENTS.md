@@ -14,8 +14,13 @@
 
 ## Data rules
 
+- Write every history under `api/v1/series/` using two-space indentation and one
+  key per line, including observations. Follow the official series header and ENE
+  observation contract in the README. Keep ENE dimensions and upstream keys in
+  the catalog. Bump the ENE adapter version when cached histories must migrate.
 - Preserve complete histories, ordered from oldest to newest, with unique dates
-  and finite numeric values. ENE observations flagged `sin_dato` retain a null value.
+  and finite numeric values. Publish upstream ENE `sin_dato` as `value: null`; include
+  `quality` only for numeric estimates marked `poco_fiable` or `no_fiable`.
 - Derive highlighted indicators from the downloaded series without extra API
   requests, and write the manifest only after all other output succeeds.
 - Preserve the versioned catalog contract and its editorial enrichment when
