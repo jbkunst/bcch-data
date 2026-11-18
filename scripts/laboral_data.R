@@ -20,6 +20,17 @@ ene_name <- function(spec, indicator, branches) {
   paste(parts[nzchar(parts)], collapse = " · ")
 }
 
+# laboral-data identifica el mes central. La API usa el mes de cierre del trimestre declarado.
+ene_closing_dates <- function(period, trimestre) {
+  months <- c("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic")
+  center <- as.Date(paste0(period, "-01"), format = "%Y-%m-%d")
+  month <- as.integer(format(center, "%m"))
+  expected <- paste(months[(month + 10L) %% 12L + 1L], months[month %% 12L + 1L], sep = "-")
+  stopifnot(!anyNA(center), all(format(center, "%Y-%m") == period),
+            all(tolower(gsub("[[:space:]]", "", trimestre)) == tolower(expected)))
+  format(center + 31L, "%Y-%m-01")
+}
+
 ene_observations <- function(dates, values, quality) {
   warnings <- c("poco_fiable", "no_fiable")
   stopifnot(all(quality %in% c("sin_advertencia", "sin_dato", warnings)),
@@ -65,7 +76,7 @@ read_laboral <- function(previous, old_records, series_dir, fetched_at) {
     inventory_md5 <- unname(tools::md5sum(signature_file))
     unlink(signature_file)
     version <- list(source_sha256 = dataset$source_sha256, build_sha256 = dataset$build_sha256,
-                    inventory_md5 = inventory_md5, adapter_version = 2L, series_count = length(ids))
+                    inventory_md5 = inventory_md5, adapter_version = 3L, series_count = length(ids))
     versions[[id]] <- version
     if (identical(version, previous$laboral_data[[id]]) &&
         all(ids %in% names(old_records)) && all(ids %in% names(previous$series)) &&
@@ -83,6 +94,10 @@ read_laboral <- function(previous, old_records, series_dir, fetched_at) {
               identical(tab$frequency, dataset$frequency), identical(tab$source_sha256, dataset$source_sha256),
               nrow(obs) == dataset$observations, all(c("region", "sex") %in% dimensions))
     row_keys <- do.call(paste, c(list(id), as.list(obs[c("indicator", dimensions)]), sep = "/"))
+    periods <- unique(obs[c("period", "trimestre_movil")])
+    stopifnot(!anyDuplicated(periods$period))
+    closes <- ene_closing_dates(periods$period, periods$trimestre_movil)
+    obs$date <- closes[match(obs$period, periods$period)]
     groups <- split(seq_len(nrow(obs)), row_keys)
     stopifnot(setequal(names(groups), keys))
     indicators <- index_by(dataset$indicators, "id")
@@ -101,7 +116,7 @@ read_laboral <- function(previous, old_records, series_dir, fetched_at) {
       name <- ene_name(spec, indicator, branches)
       provenance <- list(provider = "laboral-data", source_series_key = key)
       common <- c(list(frequency = dataset$frequency, kind = "official", official = TRUE), provenance)
-      dates <- paste0(group$period, "-01")
+      dates <- group$date
       series_fields <- c(list(name = name), common,
                          list(last_observation = tail(dates, 1L), fetched_at = fetched_at))
       entries[[series_id]] <- c(list(path = paste0("series/", series_id, ".json")), series_fields,

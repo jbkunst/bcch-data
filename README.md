@@ -27,7 +27,10 @@ del BCCh y de la ENE comparten la cabecera `series_id`, `name`, `frequency`,
 arreglo `observations`, ordenado por fecha.
 
 Cada observación lleva `date` y `value`. En la ENE, `rolling_quarter` usa el día
-1 del mes central: `2010-02-01` representa enero–marzo de 2010.
+1 del mes de cierre. Julio–septiembre de 2026 se publica con `date = "2026-09-01"`.
+El importador convierte el mes central de `laboral-data` al mes de cierre una vez
+y verifica el trimestre indicado por la fuente. El catálogo y el manifiesto usan
+la misma convención. La fecha de difusión del boletín es independiente.
 
 | Estimación ENE | `value` | Campo opcional `quality` |
 |---|---|---|

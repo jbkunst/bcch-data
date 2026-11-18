@@ -17,7 +17,10 @@
 - Write every history under `api/v1/series/` using two-space indentation and one
   key per line, including observations. Follow the official series header and ENE
   observation contract in the README. Keep ENE dimensions and upstream keys in
-  the catalog. Bump the ENE adapter version when cached histories must migrate.
+  the catalog. Publish ENE dates and coverage using the first day of the closing
+  month; verify the rolling-quarter label when importing the central month from
+  laboral-data. Consumers use the published date directly.
+  Bump the ENE adapter version when cached histories must migrate.
 - Preserve complete histories, ordered from oldest to newest, with unique dates
   and finite numeric values. Publish upstream ENE `sin_dato` as `value: null`; include
   `quality` only for numeric estimates marked `poco_fiable` or `no_fiable`.
