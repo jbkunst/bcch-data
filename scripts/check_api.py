@@ -102,28 +102,11 @@ def validate_catalog(source: ApiSource, manifest: dict[str, Any]) -> dict[str, d
         require(isinstance(record, dict), f"{label}: expected an object")
         fields = set(record)
         require(required_fields <= fields, f"{label}: missing fields")
+        require(fields <= required_fields | provenance_fields, f"{label}: unexpected fields")
         series_id = record.get("series_id")
         require(isinstance(series_id, str) and series_id, f"{label}: invalid series_id")
         require(series_id not in catalog, f"catalog: duplicate series_id {series_id}")
-        ene = series_id.startswith("INE.ENE.")
-        extra = {"provider", "source_series_key", "dimensions"} if ene else set()
-        require(fields <= required_fields | provenance_fields | extra, f"{label}: unexpected fields")
-        if ene:
-            key = record.get("source_series_key")
-            require(isinstance(key, str) and series_id == "INE.ENE." + key.replace("/", "."),
-                    f"{series_id}: inconsistent source key")
-            require(record.get("provider") == "laboral-data" and record.get("frequency") == "rolling_quarter",
-                    f"{series_id}: invalid ENE metadata")
-            dims = record.get("dimensions")
-            require(isinstance(dims, dict) and {"region", "sex"} <= dims.keys()
-                    and dims.keys() <= {"region", "sex", "age_group", "branch"},
-                    f"{series_id}: invalid ENE dimensions")
-            ordered = [dims[k] for k in ("region", "sex", "age_group", "branch") if k in dims]
-            require(key.split("/")[2:] == ordered, f"{series_id}: inconsistent ENE dimensions")
-        title_fields = ("frequency", "spanish_title", "display_name")
-        if not ene or record.get("english_title") is not None:
-            title_fields += ("english_title",)
-        for field in title_fields:
+        for field in ("frequency", "spanish_title", "english_title", "display_name"):
             require(
                 isinstance(record.get(field), str) and bool(record[field]),
                 f"{series_id}: invalid {field}",
@@ -145,7 +128,7 @@ def validate_catalog(source: ApiSource, manifest: dict[str, Any]) -> dict[str, d
         if first is not None and last is not None:
             require(first <= last, f"{series_id}: observation range is reversed")
         parse_iso_date(record.get("updated_at"), f"{series_id}.updated_at")
-        parse_iso_date(record.get("created_at"), f"{series_id}.created_at", nullable=ene)
+        parse_iso_date(record.get("created_at"), f"{series_id}.created_at")
 
         version = record.get("enrichment_version")
         require(isinstance(version, int) and version > 0, f"{series_id}: invalid enrichment_version")
@@ -185,18 +168,7 @@ def validate_series(
     require(official == entry.get("official", True), f"{series_id}: manifest official mismatch")
     require(official == catalog_record.get("official", True), f"{series_id}: catalog official mismatch")
 
-    ene = series_id.startswith("INE.ENE.")
-    if ene:
-        require(payload.get("source") == catalog_record.get("source") == "Instituto Nacional de Estadísticas (Chile)",
-                f"{series_id}: invalid ENE source")
-        require(set(payload) == {"series_id", "name", "frequency", "kind", "official", "source",
-                                 "fetched_at", "last_observation", "observations"},
-                f"{series_id}: unexpected ENE series fields")
-        for field in ("provider", "source_series_key"):
-            require(entry.get(field) == catalog_record[field],
-                    f"{series_id}: inconsistent {field}")
-        require(payload["name"] == catalog_record["display_name"], f"{series_id}: inconsistent ENE name")
-    elif kind == "official":
+    if kind == "official":
         require(payload.get("source") == "Banco Central de Chile", f"{series_id}: bad source")
     else:
         require(series_id.startswith("BCCHDATA."), f"{series_id}: invalid derived ID")
@@ -236,15 +208,7 @@ def validate_series(
             date.fromisoformat(observation_date)
         except ValueError as error:
             raise ApiError(f"{series_id}[{index}]: invalid ISO date") from error
-        value = observation.get("value")
-        if ene:
-            require(observation_date.endswith("-01"), f"{series_id}[{index}]: invalid ENE period")
-            require({"date", "value"} <= observation.keys() <= {"date", "value", "quality"},
-                    f"{series_id}[{index}]: unexpected ENE observation fields")
-            if "quality" in observation:
-                require(value is not None and observation["quality"] in ("poco_fiable", "no_fiable"),
-                        f"{series_id}[{index}]: invalid ENE quality")
-        require(valid_number(value) or (ene and value is None), f"{series_id}[{index}]: invalid value")
+        require(valid_number(observation.get("value")), f"{series_id}[{index}]: invalid value")
         dates.append(observation_date)
 
     require(dates == sorted(dates), f"{series_id}: observations are not ordered")
@@ -300,16 +264,6 @@ def validate(root: str) -> tuple[int, int, int, int]:
     require(manifest.get("series_count") == len(series), "manifest series_count mismatch")
     require(manifest.get("indicators_path") == "indicators.json", "unexpected indicators_path")
 
-    ene_ids = {key for key in catalog if key.startswith("INE.ENE.")}
-    if "laboral_data" in manifest or ene_ids:
-        datasets = manifest.get("laboral_data", {})
-        require(bool(datasets) and ene_ids <= series.keys(), "incomplete ENE cache")
-        counts: dict[str, int] = {}
-        for key in ene_ids:
-            dataset = catalog[key]["source_series_key"].split("/")[0]
-            counts[dataset] = counts.get(dataset, 0) + 1
-        require(counts == {key: meta["series_count"] for key, meta in datasets.items()},
-                "ENE inventory count mismatch")
     payloads: dict[str, dict[str, Any]] = {}
     observation_count = 0
     expected_paths: set[str] = set()

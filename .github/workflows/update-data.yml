@@ -58,8 +58,7 @@ jobs:
           stale = True
           try:
               with open("api/v1/manifest.json", encoding="utf-8") as manifest_file:
-                  manifest = json.load(manifest_file)
-                  updated_at = manifest.get("bcch_updated_at", manifest["updated_at"])
+                  updated_at = json.load(manifest_file)["updated_at"]
               updated = datetime.fromisoformat(updated_at.replace("Z", "+00:00"))
               age = datetime.now(timezone.utc) - updated
               stale = age >= timedelta(hours=20)
@@ -71,15 +70,11 @@ jobs:
               output.write(f"stale={str(stale).lower()}\n")
           PY
 
-      - name: Update BCCh and ENE histories
+      - name: Update data from BCCh
         if: github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && steps.freshness.outputs.stale == 'true')
         env:
           BCCH_TOKEN: ${{ secrets.BCCH_TOKEN }}
         run: Rscript scripts/update_data.R
-
-      - name: Import ENE from laboral-data using the cached BCCh snapshot
-        if: github.event_name == 'push' || github.event_name == 'pull_request'
-        run: Rscript scripts/update_data.R --laboral-only
 
       - name: Validate static API
         run: python scripts/check_api.py
@@ -94,12 +89,12 @@ jobs:
           cp -R api/v1 _site/api/v1
 
       - name: Commit updated JSON
-        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && steps.freshness.outputs.stale == 'true')
+        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && steps.freshness.outputs.stale == 'true')
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add api/v1
-          git diff --cached --quiet || git commit -m "chore(data): update published series"
+          git diff --cached --quiet || git commit -m "chore(data): update BCCh series"
           git push
 
       - uses: actions/configure-pages@v5
